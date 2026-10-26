@@ -8,12 +8,9 @@ import { PromoBanner } from '@/components/PromoBanner'
 import { Collections } from '@/components/Collections'
 import { Footer } from '@/components/Footer'
 import { SearchModal } from '@/components/SearchModal'
-import { ProductQuickView } from '@/components/ProductQuickView'
-import type { Product } from '@/types'
 
 export default function HomePage() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
@@ -42,13 +39,6 @@ export default function HomePage() {
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
-        onSelectProduct={(prod) => setSelectedProduct(prod)}
-      />
-
-      {/* Interactive Product Quick View Modal */}
-      <ProductQuickView
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
       />
     </div>
   )

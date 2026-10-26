@@ -7,13 +7,10 @@ import { ProductCard } from '@/components/ProductCard'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import { Footer } from '@/components/Footer'
 import { SearchModal } from '@/components/SearchModal'
-import { ProductQuickView } from '@/components/ProductQuickView'
 import { productsData } from '@/data/products'
-import type { Product } from '@/types'
 
 export default function CollectionsAllPage() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc'>('featured')
 
   const sortedProducts = useMemo(() => {
@@ -68,10 +65,7 @@ export default function CollectionsAllPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {sortedProducts.map((product, idx) => (
               <ScrollReveal key={product.id} delay={(idx % 4) * 80}>
-                <ProductCard
-                  product={product}
-                  onClick={(p) => setSelectedProduct(p)}
-                />
+                <ProductCard product={product} />
               </ScrollReveal>
             ))}
           </div>
@@ -85,13 +79,6 @@ export default function CollectionsAllPage() {
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
-        onSelectProduct={(prod) => setSelectedProduct(prod)}
-      />
-
-      {/* Product Quick View Dialog */}
-      <ProductQuickView
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
       />
     </div>
   )
