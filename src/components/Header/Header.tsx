@@ -1,0 +1,104 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { Container } from '../Container'
+import { navLinks, businessName } from '@/data/navigation'
+
+interface Props {
+  onOpenSearch: () => void
+}
+
+export function Header({ onOpenSearch }: Props) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  return (
+    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 transition-colors">
+      <Container className="flex h-16 sm:h-20 items-center justify-between">
+        {/* Left Navigation */}
+        <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="text-sm font-medium text-gray-800 transition hover:text-black tracking-tight"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Mobile menu button */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100"
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileMenuOpen}
+        >
+          {mobileMenuOpen ? (
+            <svg className="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
+
+        {/* Center Store Title / Logo */}
+        <div className="flex min-w-0 items-center justify-center px-2 text-center">
+          <Link
+            href="/"
+            className="text-base sm:text-lg font-bold tracking-tight text-gray-950 transition hover:opacity-80 truncate"
+          >
+            {businessName}
+          </Link>
+        </div>
+
+        {/* Search Action */}
+        <div className="flex shrink-0 items-center justify-end">
+          <button
+            type="button"
+            onClick={onOpenSearch}
+            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-gray-800 hover:bg-gray-100 transition"
+            aria-label="Search store"
+          >
+            <svg
+              className="h-5 w-5 shrink-0 transition group-hover:scale-110"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+        </div>
+      </Container>
+
+      {/* Mobile dropdown menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-b border-gray-100 bg-white px-6 py-4 shadow-lg animate-fade-in">
+          <div className="flex flex-col space-y-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-base font-medium text-gray-800 hover:text-black py-1"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </header>
+  )
+}

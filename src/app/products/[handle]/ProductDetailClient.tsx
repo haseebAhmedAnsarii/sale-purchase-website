@@ -1,0 +1,190 @@
+'use client'
+
+import { useState, useMemo } from 'react'
+import Link from 'next/link'
+import { Header } from '@/components/Header'
+import { Container } from '@/components/Container'
+import { PlaceholderImage } from '@/components/PlaceholderImage'
+import { ProductCard } from '@/components/ProductCard'
+import { Footer } from '@/components/Footer'
+import { SearchModal } from '@/components/SearchModal'
+import { productsData } from '@/data/products'
+import type { Product } from '@/types'
+
+interface Props {
+  product: Product
+}
+
+export function ProductDetailClient({ product }: Props) {
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+  const relatedProducts = useMemo(
+    () => productsData.filter((item) => item.id !== product.id).slice(0, 4),
+    [product.id]
+  )
+
+  return (
+    <div className="flex min-h-screen flex-col bg-white">
+      {/* Header */}
+      <Header onOpenSearch={() => setIsSearchOpen(true)} />
+
+      {/* Main Content */}
+      <main className="flex-1 py-8 sm:py-12">
+        <Container>
+          {/* Breadcrumbs */}
+          <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8 text-xs text-gray-500">
+            <ol className="flex items-center space-x-2">
+              <li>
+                <Link href="/" className="hover:text-black transition">
+                  Home
+                </Link>
+              </li>
+              <li>/</li>
+              <li>
+                <Link href="/collections/all" className="hover:text-black transition">
+                  Products
+                </Link>
+              </li>
+              <li>/</li>
+              <li className="text-gray-900 font-medium truncate" aria-current="page">
+                {product.title}
+              </li>
+            </ol>
+          </nav>
+
+          {/* Product Detail Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
+            {/* Left: Product Image */}
+            <div className="relative overflow-hidden rounded-lg bg-[#f8f9fa] p-6 sm:p-8 border border-gray-100">
+              <PlaceholderImage
+                aspectRatio="portrait"
+                label={product.title}
+                dimensions="800 × 1000"
+                size="lg"
+              />
+
+              {product.isSale && (
+                <span className="absolute top-6 left-6 rounded-full bg-[#5cd3c4] px-3.5 py-1 text-xs font-bold text-gray-900 tracking-wider">
+                  Sale
+                </span>
+              )}
+            </div>
+
+            {/* Right: Product Details & Purchase Form */}
+            <div className="flex flex-col space-y-6">
+              {/* Brand tag */}
+              <div>
+                <span className="text-xs uppercase tracking-wider font-semibold text-gray-500">
+                  Business Name
+                </span>
+                <h1 className="mt-1 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
+                  {product.title}
+                </h1>
+              </div>
+
+              {/* Pricing */}
+              <div className="flex items-baseline gap-3">
+                <span className="text-xl sm:text-2xl font-semibold text-gray-950">
+                  ${product.price.toFixed(2)}
+                </span>
+                {product.compareAtPrice && (
+                  <span className="text-base text-gray-400 line-through">
+                    ${product.compareAtPrice.toFixed(2)}
+                  </span>
+                )}
+                {product.isSale && (
+                  <span className="rounded-full bg-[#5cd3c4] px-2.5 py-0.5 text-xs font-bold text-gray-900">
+                    Sale
+                  </span>
+                )}
+              </div>
+
+              {/* Description */}
+              <div className="border-t border-gray-200 pt-6">
+                <p className="text-sm leading-relaxed text-gray-700">
+                  {product.description}
+                </p>
+              </div>
+
+              {/* Features List */}
+              {product.features && product.features.length > 0 && (
+                <div className="border-t border-gray-200 pt-6">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-3">
+                    Key Features
+                  </h2>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    {product.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-gray-900 shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Collapsible Details */}
+              <div className="border-t border-gray-200 pt-4 space-y-3">
+                <details className="group cursor-pointer">
+                  <summary className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-gray-900 py-2">
+                    <span>Materials & Care</span>
+                    <span className="transition group-open:rotate-180">▾</span>
+                  </summary>
+                  <p className="mt-2 text-xs text-gray-600 leading-relaxed">
+                    Crafted with premium durable materials designed for long-lasting performance. Wipe clean with a soft damp cloth.
+                  </p>
+                </details>
+
+                <details className="group cursor-pointer border-t border-gray-100 pt-3">
+                  <summary className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-gray-900 py-2">
+                    <span>Shipping & Returns</span>
+                    <span className="transition group-open:rotate-180">▾</span>
+                  </summary>
+                  <p className="mt-2 text-xs text-gray-600 leading-relaxed">
+                    Standard shipping delivery within 3-5 business days. Hassle-free 30-day return policy.
+                  </p>
+                </details>
+              </div>
+
+              {/* Back Link */}
+              <div className="border-t border-gray-200 pt-6">
+                <Link
+                  href="/collections/all"
+                  className="inline-flex items-center text-xs font-medium text-gray-600 hover:text-black transition"
+                >
+                  ← Back to all products
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Related products */}
+          {relatedProducts.length > 0 && (
+            <section
+              className="mt-16 sm:mt-24 border-t border-gray-100 pt-12 sm:pt-16"
+              aria-label="Related products"
+            >
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-950 mb-6 sm:mb-8">
+                Related products
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                {relatedProducts.map((item) => (
+                  <ProductCard key={item.id} product={item} />
+                ))}
+              </div>
+            </section>
+          )}
+        </Container>
+      </main>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
+    </div>
+  )
+}

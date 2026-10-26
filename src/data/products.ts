@@ -1,0 +1,75 @@
+import type { Product } from '@/types'
+
+export const productsData: Product[] = [
+  {
+    id: 'prod-1',
+    title: 'Product 01',
+    price: 729.95,
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    features: [
+      'Lorem ipsum dolor sit amet',
+      'Consectetur adipiscing elit',
+      'Sed do eiusmod tempor incididunt',
+      'Ut labore et dolore magna aliqua',
+    ],
+    imageAlt: 'Product 01 placeholder image',
+  },
+  {
+    id: 'prod-2',
+    title: 'Product 02',
+    price: 629.95,
+    description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    features: [
+      'Lorem ipsum dolor sit amet',
+      'Consectetur adipiscing elit',
+      'Sed do eiusmod tempor incididunt',
+      'Ut labore et dolore magna aliqua',
+    ],
+    imageAlt: 'Product 02 placeholder image',
+  },
+  {
+    id: 'prod-3',
+    title: 'Product 03',
+    price: 699.95,
+    compareAtPrice: 749.95,
+    isSale: true,
+    badge: 'Sale',
+    description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint.',
+    features: [
+      'Lorem ipsum dolor sit amet',
+      'Consectetur adipiscing elit',
+      'Sed do eiusmod tempor incididunt',
+      'Ut labore et dolore magna aliqua',
+    ],
+    imageAlt: 'Product 03 placeholder image',
+  },
+  {
+    id: 'prod-4',
+    title: 'Product 04',
+    price: 885.00,
+    description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    features: [
+      'Lorem ipsum dolor sit amet',
+      'Consectetur adipiscing elit',
+      'Sed do eiusmod tempor incididunt',
+      'Ut labore et dolore magna aliqua',
+    ],
+    imageAlt: 'Product 04 placeholder image',
+  },
+  {
+    id: 'prod-5',
+    title: 'Product 05',
+    price: 549.95,
+    compareAtPrice: 599.95,
+    isSale: true,
+    badge: 'Sale',
+    description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.',
+    features: [
+      'Lorem ipsum dolor sit amet',
+      'Consectetur adipiscing elit',
+      'Sed do eiusmod tempor incididunt',
+      'Ut labore et dolore magna aliqua',
+    ],
+    imageAlt: 'Product 05 placeholder image',
+  },
+]

@@ -1,0 +1,95 @@
+'use client'
+
+import { useState, useMemo } from 'react'
+import { Header } from '@/components/Header'
+import { Container } from '@/components/Container'
+import { ProductCard } from '@/components/ProductCard'
+import { Footer } from '@/components/Footer'
+import { SearchModal } from '@/components/SearchModal'
+import { ProductQuickView } from '@/components/ProductQuickView'
+import { productsData } from '@/data/products'
+import type { Product } from '@/types'
+
+export default function CollectionsAllPage() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc'>('featured')
+
+  const sortedProducts = useMemo(() => {
+    const list = [...productsData]
+    if (sortBy === 'price-asc') {
+      return list.sort((a, b) => a.price - b.price)
+    }
+    if (sortBy === 'price-desc') {
+      return list.sort((a, b) => b.price - a.price)
+    }
+    return list
+  }, [sortBy])
+
+  return (
+    <div className="flex min-h-screen flex-col bg-white">
+      {/* Header */}
+      <Header onOpenSearch={() => setIsSearchOpen(true)} />
+
+      {/* Main Content */}
+      <main className="flex-1 py-10 sm:py-14">
+        <Container>
+          {/* Page Title & Sort Row */}
+          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-gray-100 pb-6">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-950">
+                Products
+              </h1>
+              <p className="mt-2 text-sm text-gray-500">
+                {productsData.length} products
+              </p>
+            </div>
+
+            {/* Static Client-side Sort */}
+            <div className="flex items-center gap-3">
+              <label htmlFor="sort-by" className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Sort by:
+              </label>
+              <select
+                id="sort-by"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'featured' | 'price-asc' | 'price-desc')}
+                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-800 outline-hidden hover:border-gray-300 focus:border-black cursor-pointer"
+              >
+                <option value="featured">Featured</option>
+                <option value="price-asc">Price: Low to high</option>
+                <option value="price-desc">Price: High to low</option>
+              </select>
+            </div>
+          </div>
+
+          {/* All Products Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {sortedProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+              />
+            ))}
+          </div>
+        </Container>
+      </main>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onSelectProduct={(prod) => setSelectedProduct(prod)}
+      />
+
+      {/* Product Quick View Dialog */}
+      <ProductQuickView
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+      />
+    </div>
+  )
+}
