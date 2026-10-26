@@ -8,10 +8,10 @@ export interface BannerData {
 }
 
 export const bannerData: BannerData = {
-  title: 'Section Heading Title',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  buttonText: 'Button Action',
-  buttonHref: '/products/product-01',
-  imageSrc: '/images/placeholder-banner.svg',
-  imageAlt: 'Promo banner placeholder image',
+  title: 'The Art of Slow Living',
+  description: 'Rooted in tactile craftsmanship and timeless forms. Each stoneware vessel is shaped from mineral-rich clay and finished with warm earthy glazes designed to age gracefully.',
+  buttonText: 'Discover Stoneware',
+  buttonHref: '/collections/stoneware-dining',
+  imageSrc: '/images/banner.jpg',
+  imageAlt: 'Handcrafted textured ceramic pottery in an artisan sunlit studio',
 }

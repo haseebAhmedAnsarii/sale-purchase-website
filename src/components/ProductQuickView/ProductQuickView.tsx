@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import type { Product } from '@/types'
 import { PlaceholderImage } from '../PlaceholderImage'
 
@@ -32,14 +33,25 @@ export function ProductQuickView({ product, onClose }: Props) {
           ✕
         </button>
 
-        {/* Product Image Placeholder Preview Column */}
-        <div className="flex w-full md:w-[48%] items-center justify-center bg-gray-50 p-6 md:p-10">
-          <PlaceholderImage
-            aspectRatio="portrait"
-            label="Placeholder Image"
-            dimensions="800 × 1000"
-            size="lg"
-          />
+        {/* Product Image Preview Column */}
+        <div className="relative flex w-full md:w-[48%] min-h-[300px] md:min-h-[460px] items-center justify-center bg-[#f4f2ef]">
+          {product.imageSrc ? (
+            <Image
+              src={product.imageSrc}
+              alt={product.imageAlt || product.title}
+              fill
+              className="object-cover object-center"
+            />
+          ) : (
+            <div className="p-6 md:p-10 flex items-center justify-center">
+              <PlaceholderImage
+                aspectRatio="portrait"
+                label="Placeholder Image"
+                dimensions="800 × 1000"
+                size="lg"
+              />
+            </div>
+          )}
         </div>
 
         {/* Product Details Column */}

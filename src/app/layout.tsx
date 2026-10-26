@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Business Name | Demo',
-  description: 'Static demonstration website for sale and purchase.',
+  title: 'TERRA STUDIO | Scandinavian Ceramics & Interior Home Decor',
+  description: 'Handcrafted stoneware, sculptural vases, and warm ambient lighting rooted in Scandinavian minimalism and slow living.',
 }
 
 export default function RootLayout({

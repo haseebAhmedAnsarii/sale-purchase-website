@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Header } from '@/components/Header'
 import { Container } from '@/components/Container'
 import { PlaceholderImage } from '@/components/PlaceholderImage'
@@ -10,6 +11,7 @@ import { ScrollReveal } from '@/components/ScrollReveal'
 import { Footer } from '@/components/Footer'
 import { SearchModal } from '@/components/SearchModal'
 import { productsData } from '@/data/products'
+import { businessName } from '@/data/navigation'
 import type { Product } from '@/types'
 
 interface Props {
@@ -61,18 +63,31 @@ export function ProductDetailClient({ product }: Props) {
           {/* Product Detail Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
             {/* Left: Product Image */}
-            <div className="group relative overflow-hidden rounded-lg bg-[#f8f9fa] p-6 sm:p-8 border border-gray-100 transition-all duration-1000 hover:shadow-xl">
-              <div className="transition-transform duration-1200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105">
-                <PlaceholderImage
-                  aspectRatio="portrait"
-                  label={product.title}
-                  dimensions="800 × 1000"
-                  size="lg"
-                />
+            <div className="group relative aspect-4/5 w-full overflow-hidden rounded-lg bg-[#f4f2ef] border border-gray-100 transition-all duration-1000 hover:shadow-xl">
+              <div className="relative w-full h-full transition-transform duration-1200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105">
+                {product.imageSrc ? (
+                  <Image
+                    src={product.imageSrc}
+                    alt={product.imageAlt || product.title}
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    className="object-cover object-center"
+                  />
+                ) : (
+                  <div className="p-6 sm:p-8 h-full flex items-center justify-center">
+                    <PlaceholderImage
+                      aspectRatio="portrait"
+                      label={product.title}
+                      dimensions="800 × 1000"
+                      size="lg"
+                    />
+                  </div>
+                )}
               </div>
 
               {product.isSale && (
-                <span className="absolute top-6 left-6 rounded-full bg-[#5cd3c4] px-3.5 py-1 text-xs font-bold text-gray-900 tracking-wider shadow-xs transition-transform duration-700 group-hover:scale-105">
+                <span className="absolute top-6 left-6 rounded-full bg-[#5cd3c4] px-3.5 py-1 text-xs font-bold text-gray-900 tracking-wider shadow-xs transition-transform duration-700 group-hover:scale-105 z-10">
                   Sale
                 </span>
               )}
@@ -83,7 +98,7 @@ export function ProductDetailClient({ product }: Props) {
               {/* Brand tag */}
               <div>
                 <span className="text-xs uppercase tracking-wider font-semibold text-gray-500">
-                  Business Name
+                  {businessName}
                 </span>
                 <h1 className="mt-1 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
                   {product.title}

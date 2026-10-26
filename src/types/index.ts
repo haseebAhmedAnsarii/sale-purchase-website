@@ -7,6 +7,7 @@ export interface Product {
   badge?: string
   description: string
   features: string[]
+  imageSrc?: string
   imageAlt?: string
 }
 
@@ -14,6 +15,7 @@ export interface Collection {
   id: string
   title: string
   description: string
+  imageSrc?: string
   imageAlt?: string
   productIds?: string[]
 }

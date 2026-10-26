@@ -7,6 +7,7 @@ export const footerQuickLinks: QuickLink[] = [
 ]
 
 export const footerInfo = {
-  copyright: '© 2026 Business Name. All rights reserved.',
-  note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  copyright: '© 2026 TERRA STUDIO. All rights reserved.',
+  note: 'Handcrafted Scandinavian ceramics, stoneware, and interior home decor designed for serene modern living.',
 }
+

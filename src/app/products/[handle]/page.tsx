@@ -27,12 +27,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!product) {
     return {
-      title: 'Product Not Found | Business Name',
+      title: 'Product Not Found | TERRA STUDIO',
     }
   }
 
   return {
-    title: `${product.title} | Business Name`,
+    title: `${product.title} | TERRA STUDIO`,
     description: product.description,
   }
 }

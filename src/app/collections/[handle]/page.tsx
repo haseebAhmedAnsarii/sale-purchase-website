@@ -24,12 +24,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!collection) {
     return {
-      title: 'Collection Not Found | Business Name',
+      title: 'Collection Not Found | TERRA STUDIO',
     }
   }
 
   return {
-    title: `${collection.title} | Business Name`,
+    title: `${collection.title} | TERRA STUDIO`,
     description: collection.description,
   }
 }

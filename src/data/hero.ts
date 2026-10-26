@@ -8,10 +8,10 @@ export interface HeroData {
 }
 
 export const heroData: HeroData = {
-  title: 'Main Headline Title',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  title: 'Scandinavian Ceramics & Interior Home Decor',
+  description: 'Soft lighting, earthy textures, and architectural silhouettes handcrafted for serene modern sanctuaries.',
   buttonText: 'Shop products',
   buttonHref: '/collections/all',
-  imageSrc: '/images/placeholder-hero.svg',
-  imageAlt: 'Hero placeholder image',
+  imageSrc: '/images/hero.jpg',
+  imageAlt: 'Minimalist Scandinavian interior with handcrafted stoneware ceramics',
 }
