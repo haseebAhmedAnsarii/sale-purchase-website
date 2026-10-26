@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { Header } from '@/components/Header'
 import { Container } from '@/components/Container'
 import { ProductCard } from '@/components/ProductCard'
+import { ScrollReveal } from '@/components/ScrollReveal'
 import { Footer } from '@/components/Footer'
 import { SearchModal } from '@/components/SearchModal'
 import { ProductQuickView } from '@/components/ProductQuickView'
@@ -65,11 +66,13 @@ export default function CollectionsAllPage() {
 
           {/* All Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {sortedProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-              />
+            {sortedProducts.map((product, idx) => (
+              <ScrollReveal key={product.id} delay={(idx % 4) * 80}>
+                <ProductCard
+                  product={product}
+                  onClick={(p) => setSelectedProduct(p)}
+                />
+              </ScrollReveal>
             ))}
           </div>
         </Container>

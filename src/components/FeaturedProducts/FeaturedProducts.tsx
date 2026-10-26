@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import type { KeyboardEvent, PointerEvent, MouseEvent } from 'react'
 import { Container } from '../Container'
 import { ProductCard } from '../ProductCard'
+import { ScrollReveal } from '../ScrollReveal'
 import { productsData } from '@/data/products'
 import type { Product } from '@/types'
 
@@ -230,12 +231,13 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
       aria-label="Featured products"
     >
       <Container>
-        {/* Section Heading */}
-        <div className="mb-6 sm:mb-8 flex items-center justify-between">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
-            Featured products
-          </h2>
-        </div>
+        <ScrollReveal>
+          {/* Section Heading */}
+          <div className="mb-6 sm:mb-8 flex items-center justify-between">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+              Featured products
+            </h2>
+          </div>
 
         {/* Slider Carousel Area */}
         <div
@@ -306,6 +308,7 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
           onSelectSlide={goToSlide}
           onAdvance={handleAdvance}
         />
+        </ScrollReveal>
       </Container>
     </section>
   )

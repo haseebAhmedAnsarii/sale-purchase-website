@@ -6,6 +6,7 @@ import { Header } from '@/components/Header'
 import { Container } from '@/components/Container'
 import { PlaceholderImage } from '@/components/PlaceholderImage'
 import { ProductCard } from '@/components/ProductCard'
+import { ScrollReveal } from '@/components/ScrollReveal'
 import { Footer } from '@/components/Footer'
 import { SearchModal } from '@/components/SearchModal'
 import { productsData } from '@/data/products'
@@ -162,19 +163,23 @@ export function ProductDetailClient({ product }: Props) {
 
           {/* Related products */}
           {relatedProducts.length > 0 && (
-            <section
-              className="mt-16 sm:mt-24 border-t border-gray-100 pt-12 sm:pt-16"
-              aria-label="Related products"
-            >
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-950 mb-6 sm:mb-8">
-                Related products
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {relatedProducts.map((item) => (
-                  <ProductCard key={item.id} product={item} />
-                ))}
-              </div>
-            </section>
+            <ScrollReveal>
+              <section
+                className="mt-16 sm:mt-24 border-t border-gray-100 pt-12 sm:pt-16"
+                aria-label="Related products"
+              >
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-950 mb-6 sm:mb-8">
+                  Related products
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                  {relatedProducts.map((item, idx) => (
+                    <ScrollReveal key={item.id} delay={(idx % 4) * 80}>
+                      <ProductCard product={item} />
+                    </ScrollReveal>
+                  ))}
+                </div>
+              </section>
+            </ScrollReveal>
           )}
         </Container>
       </main>
