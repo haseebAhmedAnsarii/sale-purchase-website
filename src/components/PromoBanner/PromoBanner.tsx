@@ -7,14 +7,14 @@ export function PromoBanner() {
   return (
     <section id="promo-banner" className="w-full py-8 sm:py-12 bg-white" aria-label="Promotion banner">
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-xs bg-[#121212] shadow-xl">
+        <div className="group grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-xs bg-[#121212] shadow-xl transition-all duration-700 hover:shadow-2xl">
           {/* Left Column: Placeholder Photo */}
-          <div className="relative min-h-[22rem] sm:min-h-[26rem] lg:min-h-[30rem] w-full">
+          <div className="relative min-h-[22rem] sm:min-h-[26rem] lg:min-h-[30rem] w-full overflow-hidden">
             <Image
               src={bannerData.imageSrc}
               alt={bannerData.imageAlt}
               fill
-              className="object-cover object-center"
+              className="object-cover object-center transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
@@ -30,7 +30,7 @@ export function PromoBanner() {
             <div className="mt-8">
               <Link
                 href={bannerData.buttonHref}
-                className="inline-flex items-center justify-center rounded-xs bg-white px-8 py-3.5 text-xs sm:text-sm font-semibold tracking-wide text-black transition hover:bg-gray-100 focus:outline-hidden"
+                className="inline-flex items-center justify-center rounded-xs bg-white px-8 py-3.5 text-xs sm:text-sm font-semibold tracking-wide text-black transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-gray-100 hover:-translate-y-0.5 active:translate-y-0 hover:shadow-lg focus:outline-hidden"
               >
                 {bannerData.buttonText}
               </Link>

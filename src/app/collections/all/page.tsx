@@ -32,7 +32,7 @@ export default function CollectionsAllPage() {
       <Header onOpenSearch={() => setIsSearchOpen(true)} />
 
       {/* Main Content */}
-      <main className="flex-1 py-10 sm:py-14">
+      <main className="flex-1 py-10 sm:py-14 animate-fade-in">
         <Container>
           {/* Page Title & Sort Row */}
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-gray-100 pb-6">

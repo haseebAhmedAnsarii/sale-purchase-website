@@ -21,7 +21,7 @@ export function Header({ onOpenSearch }: Props) {
             <Link
               key={link.label}
               href={link.href}
-              className="text-sm font-medium text-gray-800 transition hover:text-black tracking-tight"
+              className="relative text-sm font-medium text-gray-800 transition-colors duration-300 hover:text-black tracking-tight after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-black after:transition-all after:duration-400 after:ease-[cubic-bezier(0.16,1,0.3,1)]"
             >
               {link.label}
             </Link>
@@ -32,7 +32,7 @@ export function Header({ onOpenSearch }: Props) {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100"
+          className="md:hidden flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 transition-transform duration-300 active:scale-90"
           aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileMenuOpen}
         >
@@ -51,7 +51,7 @@ export function Header({ onOpenSearch }: Props) {
         <div className="flex min-w-0 items-center justify-center px-2 text-center">
           <Link
             href="/"
-            className="text-base sm:text-lg font-bold tracking-tight text-gray-950 transition hover:opacity-80 truncate"
+            className="text-base sm:text-lg font-bold tracking-tight text-gray-950 transition-opacity duration-300 hover:opacity-75 truncate"
           >
             {businessName}
           </Link>
@@ -62,11 +62,11 @@ export function Header({ onOpenSearch }: Props) {
           <button
             type="button"
             onClick={onOpenSearch}
-            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-gray-800 hover:bg-gray-100 transition"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-gray-800 hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95"
             aria-label="Search store"
           >
             <svg
-              className="h-5 w-5 shrink-0 transition group-hover:scale-110"
+              className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

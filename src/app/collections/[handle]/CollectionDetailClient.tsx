@@ -35,19 +35,19 @@ export function CollectionDetailClient({ collection, products }: Props) {
       <Header onOpenSearch={() => setIsSearchOpen(true)} />
 
       {/* Main Content */}
-      <main className="flex-1 py-8 sm:py-12">
+      <main className="flex-1 py-8 sm:py-12 animate-fade-in">
         <Container>
           {/* Breadcrumbs */}
           <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8 text-xs text-gray-500">
             <ol className="flex items-center space-x-2">
               <li>
-                <Link href="/" className="hover:text-black transition">
+                <Link href="/" className="hover:text-black transition-colors duration-200">
                   Home
                 </Link>
               </li>
               <li>/</li>
               <li>
-                <Link href="/collections/all" className="hover:text-black transition">
+                <Link href="/collections/all" className="hover:text-black transition-colors duration-200">
                   Collections
                 </Link>
               </li>

@@ -37,7 +37,7 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[40rem] rounded-xl bg-white shadow-2xl overflow-hidden border border-gray-200"
+        className="animate-scale-in w-full max-w-[40rem] rounded-xl bg-white shadow-2xl overflow-hidden border border-gray-200"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

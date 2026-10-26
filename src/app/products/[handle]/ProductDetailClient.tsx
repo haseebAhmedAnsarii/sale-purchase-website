@@ -29,19 +29,19 @@ export function ProductDetailClient({ product }: Props) {
       <Header onOpenSearch={() => setIsSearchOpen(true)} />
 
       {/* Main Content */}
-      <main className="flex-1 py-8 sm:py-12">
+      <main className="flex-1 py-8 sm:py-12 animate-fade-in">
         <Container>
           {/* Breadcrumbs */}
           <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8 text-xs text-gray-500">
             <ol className="flex items-center space-x-2">
               <li>
-                <Link href="/" className="hover:text-black transition">
+                <Link href="/" className="hover:text-black transition-colors duration-200">
                   Home
                 </Link>
               </li>
               <li>/</li>
               <li>
-                <Link href="/collections/all" className="hover:text-black transition">
+                <Link href="/collections/all" className="hover:text-black transition-colors duration-200">
                   Products
                 </Link>
               </li>
@@ -55,16 +55,18 @@ export function ProductDetailClient({ product }: Props) {
           {/* Product Detail Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
             {/* Left: Product Image */}
-            <div className="relative overflow-hidden rounded-lg bg-[#f8f9fa] p-6 sm:p-8 border border-gray-100">
-              <PlaceholderImage
-                aspectRatio="portrait"
-                label={product.title}
-                dimensions="800 × 1000"
-                size="lg"
-              />
+            <div className="group relative overflow-hidden rounded-lg bg-[#f8f9fa] p-6 sm:p-8 border border-gray-100 transition-all duration-700 hover:shadow-xl">
+              <div className="transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105">
+                <PlaceholderImage
+                  aspectRatio="portrait"
+                  label={product.title}
+                  dimensions="800 × 1000"
+                  size="lg"
+                />
+              </div>
 
               {product.isSale && (
-                <span className="absolute top-6 left-6 rounded-full bg-[#5cd3c4] px-3.5 py-1 text-xs font-bold text-gray-900 tracking-wider">
+                <span className="absolute top-6 left-6 rounded-full bg-[#5cd3c4] px-3.5 py-1 text-xs font-bold text-gray-900 tracking-wider shadow-xs transition-transform duration-500 group-hover:scale-105">
                   Sale
                 </span>
               )}
