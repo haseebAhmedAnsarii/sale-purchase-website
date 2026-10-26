@@ -1,6 +1,6 @@
 import type { NavLink } from '@/types'
 
-export const businessName = 'Business Name'
+export const businessName = 'Business Namezzzzzz'
 
 // Navigation links for header
 export const navLinks: NavLink[] = [
