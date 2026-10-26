@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import type { KeyboardEvent, PointerEvent, MouseEvent } from 'react'
+import Link from 'next/link'
 import { Container } from '../Container'
 import { ProductCard } from '../ProductCard'
 import { ScrollReveal } from '../ScrollReveal'
@@ -232,11 +233,46 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
     >
       <Container>
         <ScrollReveal>
-          {/* Section Heading */}
+          {/* Section Heading with Slide Counter and Arrow Controls */}
           <div className="mb-6 sm:mb-8 flex items-center justify-between">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
               Featured products
             </h2>
+
+            {totalSlides > 1 && (
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs tracking-wider text-gray-400 select-none">
+                  <span className="font-semibold text-gray-900">{String(currentSlide).padStart(2, '0')}</span>
+                  <span className="mx-1 text-gray-300">/</span>
+                  <span>{String(totalSlides).padStart(2, '0')}</span>
+                </span>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={handlePrev}
+                    disabled={!canGoPrev}
+                    aria-label="Previous product"
+                    className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:border-gray-950 hover:text-black transition disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-2 focus-visible:outline-black"
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    disabled={!canGoNext}
+                    aria-label="Next product"
+                    className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:border-gray-950 hover:text-black transition disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-2 focus-visible:outline-black"
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
         {/* Slider Carousel Area */}
@@ -297,8 +333,8 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
           </div>
         </div>
 
-        {/* Carousel Dots Pagination with 1 to 100% Fill Effect & Play/Pause */}
-        <CarouselDots
+        {/* Minimalist Progress Bar & Autoplay Controls */}
+        <CarouselProgressBar
           totalSlides={totalSlides}
           currentSlide={currentSlide}
           isPlaying={isPlaying}
@@ -314,7 +350,7 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
   )
 }
 
-interface CarouselDotsProps {
+interface CarouselProgressBarProps {
   totalSlides: number
   currentSlide: number
   isPlaying: boolean
@@ -325,7 +361,7 @@ interface CarouselDotsProps {
   onAdvance: () => void
 }
 
-function CarouselDots({
+function CarouselProgressBar({
   totalSlides,
   currentSlide,
   isPlaying,
@@ -334,17 +370,16 @@ function CarouselDots({
   onTogglePlay,
   onSelectSlide,
   onAdvance,
-}: CarouselDotsProps) {
-  const [progress, setProgress] = useState(0)
-  const progressRef = useRef(0)
+}: CarouselProgressBarProps) {
+  const timerProgress = useRef(0)
+  const barRef = useRef<HTMLDivElement>(null)
 
   // Reset progress whenever currentSlide changes
   useEffect(() => {
-    progressRef.current = 0
-    setProgress(0)
+    timerProgress.current = 0
   }, [currentSlide])
 
-  // Continuous timer that fills from 0 to 100% and triggers onAdvance
+  // Continuous timer that advances slides
   useEffect(() => {
     if (totalSlides <= 1 || isPaused) return
 
@@ -352,13 +387,10 @@ function CarouselDots({
     const step = (tickMs / interval) * 100
 
     const timer = setInterval(() => {
-      progressRef.current += step
-      if (progressRef.current >= 100) {
-        progressRef.current = 0
-        setProgress(0)
+      timerProgress.current += step
+      if (timerProgress.current >= 100) {
+        timerProgress.current = 0
         onAdvance()
-      } else {
-        setProgress(progressRef.current)
       }
     }, tickMs)
 
@@ -367,66 +399,71 @@ function CarouselDots({
 
   if (totalSlides <= 1) return null
 
-  return (
-    <div className="mt-8 flex items-center justify-center gap-2.5 sm:gap-3">
-      {/* Play / Pause Toggle Button */}
-      <button
-        type="button"
-        onClick={onTogglePlay}
-        aria-label={isPlaying ? 'Pause autoslide' : 'Start autoslide'}
-        className="flex h-8 w-8 items-center justify-center rounded-full text-gray-700 hover:text-black hover:bg-gray-100 transition focus-visible:outline-2 focus-visible:outline-black cursor-pointer shrink-0"
-      >
-        {isPlaying ? (
-          <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="6" y="4" width="4" height="16" rx="1" />
-            <rect x="14" y="4" width="4" height="16" rx="1" />
-          </svg>
-        ) : (
-          <svg className="h-3.5 w-3.5 fill-current translate-x-0.5" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 4.75a1 1 0 011.53-.85l12 7.25a1 1 0 010 1.7l-12 7.25A1 1 0 016 19.25V4.75z" />
-          </svg>
-        )}
-      </button>
+  const handleBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!barRef.current) return
+    const rect = barRef.current.getBoundingClientRect()
+    const clickX = e.clientX - rect.left
+    const ratio = Math.max(0, Math.min(1, clickX / rect.width))
+    const targetSlide = Math.min(totalSlides, Math.max(1, Math.round(ratio * (totalSlides - 1)) + 1))
+    onSelectSlide(targetSlide)
+  }
 
-      {/* Dots List */}
+  return (
+    <div className="mt-8 sm:mt-10 flex items-center justify-between gap-4 max-w-full">
+      {/* Play / Pause Toggle Button */}
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onTogglePlay}
+          aria-label={isPlaying ? 'Pause autoslide' : 'Start autoslide'}
+          className="flex h-8 w-8 items-center justify-center rounded-full text-gray-700 hover:text-black hover:bg-gray-100 transition focus-visible:outline-2 focus-visible:outline-black cursor-pointer shrink-0"
+        >
+          {isPlaying ? (
+            <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="6" y="4" width="4" height="16" rx="1" />
+              <rect x="14" y="4" width="4" height="16" rx="1" />
+            </svg>
+          ) : (
+            <svg className="h-3.5 w-3.5 fill-current translate-x-0.5" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 4.75a1 1 0 011.53-.85l12 7.25a1 1 0 010 1.7l-12 7.25A1 1 0 016 19.25V4.75z" />
+            </svg>
+          )}
+        </button>
+        <span className="text-[0.6875rem] uppercase tracking-wider font-medium text-gray-400 hidden sm:inline">
+          {isPlaying ? 'Autoplay' : 'Paused'}
+        </span>
+      </div>
+
+      {/* Interactive Progress Line */}
       <div
-        className="flex items-center justify-center gap-1.5 flex-wrap max-w-full"
-        role="tablist"
-        aria-label="Featured products pagination"
+        ref={barRef}
+        onClick={handleBarClick}
+        role="progressbar"
+        aria-valuenow={currentSlide}
+        aria-valuemin={1}
+        aria-valuemax={totalSlides}
+        aria-label={`Slide ${currentSlide} of ${totalSlides}`}
+        className="relative flex-1 max-w-xs sm:max-w-sm md:max-w-md h-6 flex items-center cursor-pointer group"
       >
-        {Array.from({ length: totalSlides }).map((_, idx) => {
-          const slideNum = idx + 1
-          const isActive = currentSlide === slideNum
-          return (
-            <button
-              key={slideNum}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-label={`Go to slide ${slideNum}`}
-              onClick={() => onSelectSlide(slideNum)}
-              className="group flex h-8 items-center justify-center cursor-pointer rounded-full px-1 focus-visible:outline-2 focus-visible:outline-black"
-            >
-              <span
-                className={`relative block h-2 rounded-full overflow-hidden transition-all duration-300 ${
-                  isActive
-                    ? 'w-8 sm:w-10 bg-gray-200'
-                    : 'w-2 bg-gray-300 group-hover:bg-gray-400'
-                }`}
-              >
-                {isActive && (
-                  <span
-                    className="absolute inset-y-0 left-0 bg-gray-950 rounded-full h-full"
-                    style={{
-                      width: `${Math.min(progress, 100)}%`,
-                      transition: isPaused ? 'none' : 'width 25ms linear',
-                    }}
-                  />
-                )}
-              </span>
-            </button>
-          )
-        })}
+        <div className="w-full h-1 bg-[#edeae6] rounded-full overflow-hidden relative">
+          <div
+            className="absolute top-0 bottom-0 left-0 bg-gray-950 rounded-full transition-all duration-300 ease-out"
+            style={{
+              width: `${Math.max(8, (currentSlide / totalSlides) * 100)}%`,
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Catalog Link */}
+      <div>
+        <Link
+          href="/collections/all"
+          className="text-xs font-semibold text-gray-950 hover:underline flex items-center gap-1 group shrink-0"
+        >
+          <span>Catalog</span>
+          <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        </Link>
       </div>
     </div>
   )

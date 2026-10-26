@@ -1,14 +1,21 @@
-import { useState, useEffect, useId } from 'react'
+'use client'
+
+import { useState, useEffect, useId, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Product } from '@/types'
 import { productsData } from '@/data/products'
+import { collectionsData } from '@/data/collections'
 import { getProductSlug } from '@/utils/product'
+import { getCollectionSlug } from '@/utils/collection'
 
 interface Props {
   isOpen: boolean
   onClose: () => void
   onSelectProduct?: (product: Product) => void
 }
+
+const MAX_SEARCH_RESULTS = 4
 
 export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
   const [query, setQuery] = useState('')
@@ -24,12 +31,33 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
+  // Reset query on close
+  useEffect(() => {
+    if (!isOpen) {
+      setQuery('')
+    }
+  }, [isOpen])
+
+  const matches = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    if (!q) return []
+    return productsData.filter(
+      (item) =>
+        item.title.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q)
+    )
+  }, [query])
+
+  const displayedResults = useMemo(() => {
+    return matches.slice(0, MAX_SEARCH_RESULTS)
+  }, [matches])
+
+  // Top 3 curated popular picks when query is empty
+  const popularPicks = useMemo(() => productsData.slice(0, 3), [])
+
   if (!isOpen) return null
 
-  const filtered = productsData.filter((item) =>
-    item.title.toLowerCase().includes(query.toLowerCase()) ||
-    item.description.toLowerCase().includes(query.toLowerCase())
-  )
+  const isSearching = query.trim().length > 0
 
   return (
     <div
@@ -37,16 +65,16 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
       onClick={onClose}
     >
       <div
-        className="animate-scale-in w-full max-w-[40rem] rounded-xl bg-white shadow-2xl overflow-hidden border border-gray-200"
+        className="animate-scale-in w-full max-w-[42rem] rounded-2xl bg-white shadow-2xl overflow-hidden border border-gray-100"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-label="Search products"
       >
         {/* Search Input Bar */}
-        <div className="flex items-center gap-2.5 sm:gap-3 border-b border-gray-200 px-3.5 py-3 sm:px-5 sm:py-4">
+        <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
           <svg
-            className="h-5 w-5 text-gray-500 shrink-0"
+            className="h-5 w-5 text-gray-400 shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -68,14 +96,14 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search products, models, features..."
-            className="min-w-0 flex-1 bg-transparent text-sm sm:text-base outline-hidden text-gray-900 placeholder:text-gray-400"
+            placeholder="Search ceramics, lighting, vases, throws..."
+            className="min-w-0 flex-1 bg-transparent text-sm sm:text-base outline-hidden text-gray-900 placeholder:text-gray-400 font-normal"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
-              className="shrink-0 text-xs text-gray-400 hover:text-gray-600 px-1 cursor-pointer"
+              className="shrink-0 text-xs text-gray-400 hover:text-gray-600 px-1 cursor-pointer font-medium"
             >
               Clear
             </button>
@@ -83,58 +111,173 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 text-xs rounded-md bg-gray-100 px-2.5 py-1 text-gray-600 hover:bg-gray-200 cursor-pointer"
+            className="shrink-0 text-xs rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-600 hover:bg-gray-200 cursor-pointer transition"
           >
             Esc
           </button>
         </div>
 
-        {/* Results List */}
-        <div className="max-h-[22rem] overflow-y-auto p-4 divide-y divide-gray-100">
-          {filtered.length === 0 ? (
-            <div className="py-8 text-center text-sm text-gray-500">
-              No products found matching &quot;{query}&quot;.
+        {/* Content Body */}
+        <div className="max-h-[26rem] overflow-y-auto p-4 sm:p-5">
+          {!isSearching ? (
+            /* Empty State: Quick Suggestions & Curated Popular Picks */
+            <div className="space-y-6">
+              {/* Quick Collection Filters */}
+              <div>
+                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-500 mb-2.5">
+                  Explore Collections
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {collectionsData.map((col) => {
+                    const slug = getCollectionSlug(col)
+                    return (
+                      <Link
+                        key={col.id}
+                        href={`/collections/${slug}`}
+                        onClick={onClose}
+                        className="rounded-full bg-[#f4f2ef] px-3.5 py-1.5 text-xs font-medium text-gray-800 hover:bg-gray-950 hover:text-white transition-colors duration-200 cursor-pointer"
+                      >
+                        {col.title}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Popular Picks */}
+              <div>
+                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-500 mb-2.5">
+                  Popular Right Now
+                </p>
+                <div className="space-y-1.5">
+                  {popularPicks.map((product) => {
+                    const slug = getProductSlug(product)
+                    return (
+                      <Link
+                        key={product.id}
+                        href={`/products/${slug}`}
+                        onClick={() => {
+                          if (onSelectProduct) onSelectProduct(product)
+                          onClose()
+                        }}
+                        className="group flex cursor-pointer items-center justify-between p-2.5 rounded-lg hover:bg-[#f8f7f5] transition"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          {product.imageSrc ? (
+                            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xs bg-[#f4f2ef]">
+                              <Image
+                                src={product.imageSrc}
+                                alt={product.imageAlt || product.title}
+                                fill
+                                sizes="48px"
+                                className="object-cover object-center"
+                              />
+                            </div>
+                          ) : (
+                            <div className="h-12 w-12 shrink-0 rounded-xs bg-[#f4f2ef]" />
+                          )}
+                          <div className="min-w-0">
+                            <h4 className="text-sm font-medium text-gray-950 group-hover:underline underline-offset-4 truncate">
+                              {product.title}
+                            </h4>
+                            <p className="text-xs text-gray-500 line-clamp-1">
+                              ${product.price.toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-xs text-gray-400 group-hover:text-black group-hover:translate-x-1 transition-transform">
+                          →
+                        </span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          ) : matches.length === 0 ? (
+            /* No Results */
+            <div className="py-10 text-center">
+              <p className="text-sm text-gray-600">
+                No products found matching &quot;{query}&quot;.
+              </p>
+              <p className="mt-1 text-xs text-gray-400">
+                Try searching for stoneware, linen, brass, or vases.
+              </p>
             </div>
           ) : (
-            filtered.map((product) => {
-              const slug = getProductSlug(product)
-              return (
-                <Link
-                  key={product.id}
-                  href={`/products/${slug}`}
-                  onClick={() => {
-                    if (onSelectProduct) {
-                      onSelectProduct(product)
-                    }
-                    onClose()
-                  }}
-                  className="group flex cursor-pointer items-center justify-between py-3 px-2 rounded-lg hover:bg-gray-50 transition"
-                >
-                  <div>
-                    <h4 className="text-sm font-semibold text-gray-900 group-hover:text-black">
-                      {product.title}
-                    </h4>
-                    <p className="text-xs text-gray-500 line-clamp-1">
-                      {product.description}
-                    </p>
-                  </div>
-                  <div className="text-right pl-4">
-                    <span className="text-sm font-semibold text-gray-900">
-                      ${product.price.toFixed(2)}
-                    </span>
-                    {product.isSale && (
-                      <span className="ml-2 rounded-full bg-[#5cd3c4] px-2 py-0.5 text-[0.625rem] font-bold text-gray-900">
-                        Sale
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              )
-            })
+            /* Filtered Matches (Capped to MAX_SEARCH_RESULTS) */
+            <div className="space-y-2">
+              <div className="divide-y divide-gray-100">
+                {displayedResults.map((product) => {
+                  const slug = getProductSlug(product)
+                  return (
+                    <Link
+                      key={product.id}
+                      href={`/products/${slug}`}
+                      onClick={() => {
+                        if (onSelectProduct) onSelectProduct(product)
+                        onClose()
+                      }}
+                      className="group flex cursor-pointer items-center justify-between py-2.5 px-2 rounded-lg hover:bg-[#f8f7f5] transition"
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        {product.imageSrc ? (
+                          <div className="relative h-13 w-13 shrink-0 overflow-hidden rounded-xs bg-[#f4f2ef]">
+                            <Image
+                              src={product.imageSrc}
+                              alt={product.imageAlt || product.title}
+                              fill
+                              sizes="52px"
+                              className="object-cover object-center"
+                            />
+                          </div>
+                        ) : (
+                          <div className="h-13 w-13 shrink-0 rounded-xs bg-[#f4f2ef]" />
+                        )}
+                        <div className="min-w-0">
+                          <h4 className="text-sm font-medium text-gray-950 group-hover:underline underline-offset-4 truncate">
+                            {product.title}
+                          </h4>
+                          <p className="text-xs text-gray-500 line-clamp-1">
+                            {product.description}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right pl-4 shrink-0">
+                        <span className="text-sm font-semibold text-gray-950">
+                          ${product.price.toFixed(2)}
+                        </span>
+                        {product.isSale && (
+                          <span className="ml-2 rounded-full bg-[#5cd3c4] px-2 py-0.5 text-[0.625rem] font-bold text-gray-900">
+                            Sale
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+
+              {/* Bottom bar when matches exceed preview limit */}
+              {matches.length > MAX_SEARCH_RESULTS && (
+                <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between px-2">
+                  <span className="text-xs text-gray-500">
+                    Showing {displayedResults.length} of {matches.length} matches
+                  </span>
+                  <Link
+                    href="/collections/all"
+                    onClick={onClose}
+                    className="text-xs font-semibold text-gray-950 hover:underline flex items-center gap-1 group"
+                  >
+                    <span>View all in Catalog</span>
+                    <span className="transition-transform group-hover:translate-x-1">→</span>
+                  </Link>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
     </div>
   )
 }
-
