@@ -18,13 +18,10 @@ interface Props {
 
 export function ProductDetailClient({ product }: Props) {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
+  const [openSection, setOpenSection] = useState<string | null>(null)
 
   const toggleSection = (id: string) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }))
+    setOpenSection((prev) => (prev === id ? null : id))
   }
 
   const relatedProducts = useMemo(
@@ -141,13 +138,13 @@ export function ProductDetailClient({ product }: Props) {
                   <button
                     type="button"
                     onClick={() => toggleSection('materials')}
-                    aria-expanded={Boolean(openSections['materials'])}
+                    aria-expanded={openSection === 'materials'}
                     className="flex w-full items-center justify-between py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900 hover:text-black transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-black rounded-xs"
                   >
                     <span>Materials & Care</span>
                     <svg
                       className={`h-3.5 w-3.5 text-gray-500 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                        openSections['materials'] ? 'rotate-180 text-black' : ''
+                        openSection === 'materials' ? 'rotate-180 text-black' : ''
                       }`}
                       fill="none"
                       viewBox="0 0 24 24"
@@ -160,10 +157,10 @@ export function ProductDetailClient({ product }: Props) {
                   </button>
                   <div
                     style={{
-                      gridTemplateRows: openSections['materials'] ? '1fr' : '0fr',
+                      gridTemplateRows: openSection === 'materials' ? '1fr' : '0fr',
                     }}
                     className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                      openSections['materials'] ? 'opacity-100' : 'opacity-0'
+                      openSection === 'materials' ? 'opacity-100' : 'opacity-0'
                     }`}
                   >
                     <div className="overflow-hidden min-h-0">
@@ -179,13 +176,13 @@ export function ProductDetailClient({ product }: Props) {
                   <button
                     type="button"
                     onClick={() => toggleSection('shipping')}
-                    aria-expanded={Boolean(openSections['shipping'])}
+                    aria-expanded={openSection === 'shipping'}
                     className="flex w-full items-center justify-between py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900 hover:text-black transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-black rounded-xs"
                   >
                     <span>Shipping & Returns</span>
                     <svg
                       className={`h-3.5 w-3.5 text-gray-500 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                        openSections['shipping'] ? 'rotate-180 text-black' : ''
+                        openSection === 'shipping' ? 'rotate-180 text-black' : ''
                       }`}
                       fill="none"
                       viewBox="0 0 24 24"
@@ -198,10 +195,10 @@ export function ProductDetailClient({ product }: Props) {
                   </button>
                   <div
                     style={{
-                      gridTemplateRows: openSections['shipping'] ? '1fr' : '0fr',
+                      gridTemplateRows: openSection === 'shipping' ? '1fr' : '0fr',
                     }}
                     className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                      openSections['shipping'] ? 'opacity-100' : 'opacity-0'
+                      openSection === 'shipping' ? 'opacity-100' : 'opacity-0'
                     }`}
                   >
                     <div className="overflow-hidden min-h-0">
