@@ -18,6 +18,14 @@ interface Props {
 
 export function ProductDetailClient({ product }: Props) {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
+
+  const toggleSection = (id: string) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
 
   const relatedProducts = useMemo(
     () => productsData.filter((item) => item.id !== product.id).slice(0, 4),
@@ -127,26 +135,82 @@ export function ProductDetailClient({ product }: Props) {
               )}
 
               {/* Collapsible Details */}
-              <div className="border-t border-gray-200 pt-4 space-y-3">
-                <details className="group cursor-pointer">
-                  <summary className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-gray-900 py-2">
+              <div className="border-t border-gray-200 pt-2 space-y-1">
+                {/* Materials & Care */}
+                <div className="border-b border-gray-100">
+                  <button
+                    type="button"
+                    onClick={() => toggleSection('materials')}
+                    aria-expanded={Boolean(openSections['materials'])}
+                    className="flex w-full items-center justify-between py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900 hover:text-black transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-black rounded-xs"
+                  >
                     <span>Materials & Care</span>
-                    <span className="transition group-open:rotate-180">▾</span>
-                  </summary>
-                  <p className="mt-2 text-xs text-gray-600 leading-relaxed">
-                    Crafted with premium durable materials designed for long-lasting performance. Wipe clean with a soft damp cloth.
-                  </p>
-                </details>
+                    <svg
+                      className={`h-3.5 w-3.5 text-gray-500 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                        openSections['materials'] ? 'rotate-180 text-black' : ''
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      aria-hidden="true"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div
+                    style={{
+                      gridTemplateRows: openSections['materials'] ? '1fr' : '0fr',
+                    }}
+                    className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      openSections['materials'] ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    <div className="overflow-hidden min-h-0">
+                      <p className="pb-3 pt-0.5 text-xs text-gray-600 leading-relaxed">
+                        Crafted with premium durable materials designed for long-lasting performance. Wipe clean with a soft damp cloth.
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-                <details className="group cursor-pointer border-t border-gray-100 pt-3">
-                  <summary className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-gray-900 py-2">
+                {/* Shipping & Returns */}
+                <div className="border-b border-gray-100">
+                  <button
+                    type="button"
+                    onClick={() => toggleSection('shipping')}
+                    aria-expanded={Boolean(openSections['shipping'])}
+                    className="flex w-full items-center justify-between py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900 hover:text-black transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-black rounded-xs"
+                  >
                     <span>Shipping & Returns</span>
-                    <span className="transition group-open:rotate-180">▾</span>
-                  </summary>
-                  <p className="mt-2 text-xs text-gray-600 leading-relaxed">
-                    Standard shipping delivery within 3-5 business days. Hassle-free 30-day return policy.
-                  </p>
-                </details>
+                    <svg
+                      className={`h-3.5 w-3.5 text-gray-500 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                        openSections['shipping'] ? 'rotate-180 text-black' : ''
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      aria-hidden="true"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div
+                    style={{
+                      gridTemplateRows: openSections['shipping'] ? '1fr' : '0fr',
+                    }}
+                    className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      openSections['shipping'] ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    <div className="overflow-hidden min-h-0">
+                      <p className="pb-3 pt-0.5 text-xs text-gray-600 leading-relaxed">
+                        Standard shipping delivery within 3-5 business days. Hassle-free 30-day return policy.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Back Link */}

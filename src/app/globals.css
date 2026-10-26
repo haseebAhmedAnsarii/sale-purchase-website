@@ -93,3 +93,22 @@ a, button {
   transition-duration: 400ms;
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Smooth Accordion Transitions */
+.accordion-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 600ms cubic-bezier(0.16, 1, 0.3, 1), opacity 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: grid-template-rows, opacity;
+}
+
+.accordion-content.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.accordion-inner {
+  overflow: hidden;
+  min-height: 0;
+}
