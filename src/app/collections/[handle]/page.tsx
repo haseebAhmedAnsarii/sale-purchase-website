@@ -29,8 +29,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${collection.title} | TERRA STUDIO`,
+    title: collection.title,
     description: collection.description,
+    openGraph: {
+      title: `${collection.title} | TERRA STUDIO`,
+      description: collection.description,
+      images: collection.imageSrc
+        ? [
+            {
+              url: collection.imageSrc,
+              alt: collection.imageAlt || collection.title,
+            },
+          ]
+        : ['/og-image.jpg'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${collection.title} | TERRA STUDIO`,
+      description: collection.description,
+      images: collection.imageSrc ? [collection.imageSrc] : ['/og-image.jpg'],
+    },
   }
 }
 
