@@ -270,7 +270,7 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
               className={`relative flex gap-4 sm:gap-6 will-change-transform ${
                 isDragging
                   ? 'transition-none duration-0'
-                  : 'transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]'
+                  : 'transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]'
               }`}
               style={{
                 transform: `translateX(-${currentTranslate}px)`,

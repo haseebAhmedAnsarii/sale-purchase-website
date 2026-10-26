@@ -77,19 +77,19 @@ body {
 
 /* Smooth Entrance and Interaction Utilities */
 .animate-fade-in {
-  animation: fadeIn 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-scale-in {
-  animation: scaleIn 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: scaleIn 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Smooth Interactive Elements */
 a, button {
-  transition-duration: 300ms;
+  transition-duration: 400ms;
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }

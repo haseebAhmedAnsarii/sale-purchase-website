@@ -67,7 +67,7 @@ export function ScrollReveal({
       style={{
         transitionDelay: delay ? `${delay}ms` : undefined,
       }}
-      className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+      className={`transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
         isVisible
           ? 'opacity-100 translate-y-0'
           : `opacity-0 ${initialTransform}`

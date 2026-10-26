@@ -13,11 +13,11 @@ export function CollectionCard({ collection }: Props) {
   return (
     <Link
       href={`/collections/${slug}`}
-      className="group flex flex-col cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-black"
+      className="group flex flex-col cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-black"
     >
       {/* Visual Area with Placeholder */}
-      <div className="relative w-full overflow-hidden rounded-xs bg-[#f8f9fa] p-4 sm:p-6 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-[#f1f3f5] group-hover:shadow-xl">
-        <div className="transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]">
+      <div className="relative w-full overflow-hidden rounded-xs bg-[#f8f9fa] p-4 sm:p-6 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-[#f1f3f5] group-hover:shadow-xl">
+        <div className="transition-transform duration-1200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]">
           <PlaceholderImage
             aspectRatio="portrait"
             label="Placeholder Image"
@@ -29,10 +29,10 @@ export function CollectionCard({ collection }: Props) {
 
       {/* Label and Arrow */}
       <div className="mt-4 flex items-center gap-2">
-        <span className="text-sm sm:text-base font-semibold text-gray-950 transition-colors duration-300 group-hover:underline underline-offset-4">
+        <span className="text-sm sm:text-base font-semibold text-gray-950 transition-colors duration-500 group-hover:underline underline-offset-4">
           {collection.title}
         </span>
-        <span className="text-base sm:text-lg text-gray-950 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2">
+        <span className="text-base sm:text-lg text-gray-950 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2">
           →
         </span>
       </div>

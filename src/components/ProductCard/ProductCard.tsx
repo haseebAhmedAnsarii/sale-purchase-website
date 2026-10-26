@@ -19,11 +19,11 @@ export function ProductCard({ product, onClick }: Props) {
           onClick(product)
         }
       }}
-      className="group flex flex-col justify-between rounded-lg bg-white p-3 sm:p-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-lg cursor-pointer block focus-visible:outline-2 focus-visible:outline-black"
+      className="group flex flex-col justify-between rounded-lg bg-white p-3 sm:p-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-lg cursor-pointer block focus-visible:outline-2 focus-visible:outline-black"
     >
       {/* Product Image / Placeholder Container */}
-      <div className="relative w-full overflow-hidden rounded-xs bg-[#f8f9fa] p-4 transition-colors duration-500 group-hover:bg-[#f1f3f5]">
-        <div className="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]">
+      <div className="relative w-full overflow-hidden rounded-xs bg-[#f8f9fa] p-4 transition-colors duration-700 group-hover:bg-[#f1f3f5]">
+        <div className="transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]">
           <PlaceholderImage
             aspectRatio="portrait"
             label="Placeholder Image"
@@ -34,7 +34,7 @@ export function ProductCard({ product, onClick }: Props) {
 
         {/* Sale badge */}
         {product.isSale && (
-          <span className="absolute bottom-3 left-3 rounded-full bg-[#5cd3c4] px-2.5 py-0.5 text-[0.6875rem] font-bold text-gray-900 tracking-wider shadow-xs transition-transform duration-500 group-hover:scale-105">
+          <span className="absolute bottom-3 left-3 rounded-full bg-[#5cd3c4] px-2.5 py-0.5 text-[0.6875rem] font-bold text-gray-900 tracking-wider shadow-xs transition-transform duration-700 group-hover:scale-105">
             Sale
           </span>
         )}
@@ -42,7 +42,7 @@ export function ProductCard({ product, onClick }: Props) {
 
       {/* Info Container */}
       <div className="mt-4 flex flex-col space-y-1">
-        <h3 className="text-xs sm:text-sm font-medium text-gray-900 transition-colors duration-300 group-hover:text-black group-hover:underline underline-offset-4">
+        <h3 className="text-xs sm:text-sm font-medium text-gray-900 transition-colors duration-500 group-hover:text-black group-hover:underline underline-offset-4">
           {product.title}
         </h3>
 

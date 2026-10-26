@@ -56,8 +56,8 @@ export function ProductDetailClient({ product }: Props) {
           {/* Product Detail Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
             {/* Left: Product Image */}
-            <div className="group relative overflow-hidden rounded-lg bg-[#f8f9fa] p-6 sm:p-8 border border-gray-100 transition-all duration-700 hover:shadow-xl">
-              <div className="transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105">
+            <div className="group relative overflow-hidden rounded-lg bg-[#f8f9fa] p-6 sm:p-8 border border-gray-100 transition-all duration-1000 hover:shadow-xl">
+              <div className="transition-transform duration-1200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105">
                 <PlaceholderImage
                   aspectRatio="portrait"
                   label={product.title}
@@ -67,7 +67,7 @@ export function ProductDetailClient({ product }: Props) {
               </div>
 
               {product.isSale && (
-                <span className="absolute top-6 left-6 rounded-full bg-[#5cd3c4] px-3.5 py-1 text-xs font-bold text-gray-900 tracking-wider shadow-xs transition-transform duration-500 group-hover:scale-105">
+                <span className="absolute top-6 left-6 rounded-full bg-[#5cd3c4] px-3.5 py-1 text-xs font-bold text-gray-900 tracking-wider shadow-xs transition-transform duration-700 group-hover:scale-105">
                   Sale
                 </span>
               )}
