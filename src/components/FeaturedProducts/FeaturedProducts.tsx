@@ -13,82 +13,176 @@ interface Props {
 
 export function FeaturedProducts({ onSelectProduct }: Props) {
   const [currentSlide, setCurrentSlide] = useState(1)
-  const [translateX, setTranslateX] = useState(0)
+  const [baseTranslateX, setBaseTranslateX] = useState(0)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
 
   const trackRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 
   const dragStartX = useRef<number | null>(null)
-  const isDragging = useRef(false)
+  const dragStartY = useRef<number | null>(null)
+  const isPointerDown = useRef(false)
+  const isDraggingRef = useRef(false)
   const hasMoved = useRef(false)
-  const swipeThreshold = 40
+  const capturedPointerId = useRef<number | null>(null)
+  const swipeThreshold = 50
+  const dragActivationThreshold = 8
 
   const totalSlides = productsData.length
   const canGoPrev = currentSlide > 1
   const canGoNext = currentSlide < totalSlides
 
-  const updatePosition = useCallback((slideIndex: number) => {
+  const getSlideOffset = useCallback((slideIndex: number) => {
     const item = itemRefs.current[slideIndex - 1]
-    if (item) {
-      setTranslateX(item.offsetLeft)
-    }
+    return item ? item.offsetLeft : 0
   }, [])
 
   useEffect(() => {
-    updatePosition(currentSlide)
-  }, [currentSlide, updatePosition])
-
-  useEffect(() => {
     const handleResize = () => {
-      updatePosition(currentSlide)
+      setBaseTranslateX(getSlideOffset(currentSlide))
     }
+    handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [currentSlide, updatePosition])
+  }, [currentSlide, getSlideOffset])
 
   const handlePrev = useCallback(() => {
     if (currentSlide > 1) {
-      setCurrentSlide((prev) => prev - 1)
+      const next = currentSlide - 1
+      setCurrentSlide(next)
+      setBaseTranslateX(getSlideOffset(next))
+      setDragOffset(0)
     }
-  }, [currentSlide])
+  }, [currentSlide, getSlideOffset])
 
   const handleNext = useCallback(() => {
     if (currentSlide < totalSlides) {
-      setCurrentSlide((prev) => prev + 1)
+      const next = currentSlide + 1
+      setCurrentSlide(next)
+      setBaseTranslateX(getSlideOffset(next))
+      setDragOffset(0)
     }
-  }, [currentSlide, totalSlides])
+  }, [currentSlide, totalSlides, getSlideOffset])
 
   const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (totalSlides <= 1) return
+    if (e.button !== 0) return
+
     dragStartX.current = e.clientX
-    isDragging.current = true
+    dragStartY.current = e.clientY
+    isPointerDown.current = true
+    isDraggingRef.current = false
     hasMoved.current = false
   }
 
   const handlePointerMove = (e: PointerEvent<HTMLDivElement>) => {
-    if (!isDragging.current || dragStartX.current === null) return
-    if (Math.abs(e.clientX - dragStartX.current) > 5) {
-      hasMoved.current = true
+    if (!isPointerDown.current || dragStartX.current === null || dragStartY.current === null) return
+
+    const deltaX = e.clientX - dragStartX.current
+    const deltaY = e.clientY - dragStartY.current
+
+    // If not yet dragging, test if movement exceeds activation threshold
+    if (!isDraggingRef.current) {
+      // If user is scrolling vertically more than horizontally, cancel pointer gesture
+      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 5) {
+        isPointerDown.current = false
+        dragStartX.current = null
+        dragStartY.current = null
+        return
+      }
+
+      // Check horizontal movement
+      if (Math.abs(deltaX) >= dragActivationThreshold) {
+        isDraggingRef.current = true
+        hasMoved.current = true
+        setIsDragging(true)
+
+        try {
+          e.currentTarget.setPointerCapture(e.pointerId)
+          capturedPointerId.current = e.pointerId
+        } catch {
+          // Ignore
+        }
+      }
+    }
+
+    // When actively dragging, update track position
+    if (isDraggingRef.current) {
+      let effectiveDelta = deltaX
+      if ((currentSlide === 1 && deltaX > 0) || (currentSlide === totalSlides && deltaX < 0)) {
+        effectiveDelta = deltaX * 0.25
+      }
+
+      setDragOffset(-effectiveDelta)
     }
   }
 
   const handlePointerUp = (e: PointerEvent<HTMLDivElement>) => {
-    if (totalSlides <= 1 || !isDragging.current || dragStartX.current === null) return
-    const deltaX = e.clientX - dragStartX.current
-    dragStartX.current = null
-    isDragging.current = false
+    if (!isPointerDown.current) return
 
-    if (Math.abs(deltaX) >= swipeThreshold) {
-      if (deltaX < 0) {
-        handleNext()
-      } else {
-        handlePrev()
+    const deltaX = dragStartX.current !== null ? e.clientX - dragStartX.current : 0
+    const wasDragging = isDraggingRef.current
+
+    if (capturedPointerId.current !== null) {
+      try {
+        if (e.currentTarget.hasPointerCapture(capturedPointerId.current)) {
+          e.currentTarget.releasePointerCapture(capturedPointerId.current)
+        }
+      } catch {
+        // Ignore
       }
+      capturedPointerId.current = null
     }
 
-    setTimeout(() => {
+    isPointerDown.current = false
+    isDraggingRef.current = false
+    setIsDragging(false)
+    dragStartX.current = null
+    dragStartY.current = null
+
+    if (wasDragging) {
+      let nextSlide = currentSlide
+      if (deltaX < -swipeThreshold && canGoNext) {
+        nextSlide = currentSlide + 1
+      } else if (deltaX > swipeThreshold && canGoPrev) {
+        nextSlide = currentSlide - 1
+      }
+
+      const targetOffset = getSlideOffset(nextSlide)
+      setCurrentSlide(nextSlide)
+      setBaseTranslateX(targetOffset)
+      setDragOffset(0)
+
+      setTimeout(() => {
+        hasMoved.current = false
+      }, 100)
+    } else {
+      // Pure click - ensure hasMoved is false so Link handles navigation
       hasMoved.current = false
-    }, 50)
+      setDragOffset(0)
+    }
+  }
+
+  const handlePointerCancel = (e: PointerEvent<HTMLDivElement>) => {
+    if (capturedPointerId.current !== null) {
+      try {
+        if (e.currentTarget.hasPointerCapture(capturedPointerId.current)) {
+          e.currentTarget.releasePointerCapture(capturedPointerId.current)
+        }
+      } catch {
+        // Ignore
+      }
+      capturedPointerId.current = null
+    }
+
+    isPointerDown.current = false
+    isDraggingRef.current = false
+    setIsDragging(false)
+    dragStartX.current = null
+    dragStartY.current = null
+    setDragOffset(0)
+    hasMoved.current = false
   }
 
   const handleClickCapture = (e: MouseEvent<HTMLDivElement>) => {
@@ -108,6 +202,8 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
       handleNext()
     }
   }
+
+  const currentTranslate = baseTranslateX + dragOffset
 
   return (
     <section
@@ -134,25 +230,30 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
         >
           {/* Slider Window */}
           <div
-            className={`overflow-hidden select-none ${
-              totalSlides > 1 ? 'cursor-grab active:cursor-grabbing' : ''
+            className={`overflow-hidden select-none touch-pan-y ${
+              totalSlides > 1
+                ? isDragging
+                  ? 'cursor-grabbing'
+                  : 'cursor-grab'
+                : ''
             }`}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
-            onPointerCancel={() => {
-              dragStartX.current = null
-              isDragging.current = false
-              hasMoved.current = false
-            }}
+            onPointerCancel={handlePointerCancel}
+            onDragStart={(e) => e.preventDefault()}
             onClickCapture={handleClickCapture}
           >
             {/* Sliding Track */}
             <div
               ref={trackRef}
-              className="relative flex gap-4 sm:gap-6 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform"
+              className={`relative flex gap-4 sm:gap-6 will-change-transform ${
+                isDragging
+                  ? 'transition-none duration-0'
+                  : 'transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]'
+              }`}
               style={{
-                transform: `translateX(-${translateX}px)`,
+                transform: `translateX(-${currentTranslate}px)`,
               }}
             >
               {productsData.map((product, idx) => (
