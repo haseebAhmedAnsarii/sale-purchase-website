@@ -5,13 +5,14 @@ import { Header } from '@/components/Header'
 import { Container } from '@/components/Container'
 import { ProductCard } from '@/components/ProductCard'
 import { ScrollReveal } from '@/components/ScrollReveal'
+import { SortDropdown, type SortOption } from '@/components/SortDropdown'
 import { Footer } from '@/components/Footer'
 import { SearchModal } from '@/components/SearchModal'
 import { productsData } from '@/data/products'
 
 export default function CollectionsAllPage() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc'>('featured')
+  const [sortBy, setSortBy] = useState<SortOption>('featured')
 
   const sortedProducts = useMemo(() => {
     const list = [...productsData]
@@ -43,22 +44,12 @@ export default function CollectionsAllPage() {
               </p>
             </div>
 
-            {/* Static Client-side Sort */}
-            <div className="flex items-center gap-3">
-              <label htmlFor="sort-by" className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Sort by:
-              </label>
-              <select
-                id="sort-by"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'featured' | 'price-asc' | 'price-desc')}
-                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-800 outline-hidden hover:border-gray-300 focus:border-black cursor-pointer"
-              >
-                <option value="featured">Featured</option>
-                <option value="price-asc">Price: Low to high</option>
-                <option value="price-desc">Price: High to low</option>
-              </select>
-            </div>
+            {/* Client-side Sort Dropdown */}
+            <SortDropdown
+              id="all-products-sort-by"
+              value={sortBy}
+              onChange={setSortBy}
+            />
           </div>
 
           {/* All Products Grid */}
