@@ -390,7 +390,7 @@ function CarouselDots({
 
       {/* Dots List */}
       <div
-        className="flex items-center gap-1.5"
+        className="flex items-center justify-center gap-1.5 flex-wrap max-w-full"
         role="tablist"
         aria-label="Featured products pagination"
       >
