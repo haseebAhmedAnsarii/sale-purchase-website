@@ -203,6 +203,13 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
     }
   }
 
+  const goToSlide = useCallback((slideIndex: number) => {
+    const targetOffset = getSlideOffset(slideIndex)
+    setCurrentSlide(slideIndex)
+    setBaseTranslateX(targetOffset)
+    setDragOffset(0)
+  }, [getSlideOffset])
+
   const currentTranslate = baseTranslateX + dragOffset
 
   return (
@@ -277,38 +284,36 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
           </div>
         </div>
 
-        {/* Carousel / Pagination Controls (< 1 / 5 >) - only rendered when more than 1 item exists */}
+        {/* Carousel Dots Pagination */}
         {totalSlides > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-3 text-xs sm:text-sm text-gray-700">
-            <button
-              type="button"
-              onClick={handlePrev}
-              disabled={!canGoPrev}
-              className={`flex h-8 w-8 items-center justify-center rounded-full transition focus-visible:outline-2 focus-visible:outline-black ${
-                !canGoPrev
-                  ? 'opacity-30 cursor-not-allowed pointer-events-none'
-                  : 'hover:bg-gray-100 cursor-pointer text-gray-900'
-              }`}
-              aria-label="Previous products slide"
-            >
-              ‹
-            </button>
-            <span className="font-medium tracking-widest tabular-nums select-none">
-              {currentSlide} / {totalSlides}
-            </span>
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={!canGoNext}
-              className={`flex h-8 w-8 items-center justify-center rounded-full transition focus-visible:outline-2 focus-visible:outline-black ${
-                !canGoNext
-                  ? 'opacity-30 cursor-not-allowed pointer-events-none'
-                  : 'hover:bg-gray-100 cursor-pointer text-gray-900'
-              }`}
-              aria-label="Next products slide"
-            >
-              ›
-            </button>
+          <div
+            className="mt-8 flex items-center justify-center gap-1.5"
+            role="tablist"
+            aria-label="Featured products pagination"
+          >
+            {Array.from({ length: totalSlides }).map((_, idx) => {
+              const slideNum = idx + 1
+              const isActive = currentSlide === slideNum
+              return (
+                <button
+                  key={slideNum}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-label={`Go to slide ${slideNum}`}
+                  onClick={() => goToSlide(slideNum)}
+                  className="group flex h-8 w-8 items-center justify-center cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-black"
+                >
+                  <span
+                    className={`block rounded-full transition-all duration-300 ${
+                      isActive
+                        ? 'w-6 h-2 bg-gray-950'
+                        : 'w-2 h-2 bg-gray-300 group-hover:bg-gray-400'
+                    }`}
+                  />
+                </button>
+              )
+            })}
           </div>
         )}
       </Container>
