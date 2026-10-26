@@ -1,0 +1,26 @@
+{
+  "name": "TERRA STUDIO - Scandinavian Ceramics & Home Decor",
+  "short_name": "TERRA STUDIO",
+  "description": "Handcrafted Scandinavian stoneware ceramics, sculptural vases, and warm ambient lighting.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1c1917",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

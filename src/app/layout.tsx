@@ -1,8 +1,19 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
+
+export const viewport: Viewport = {
+  themeColor: '#1c1917',
+  width: 'device-width',
+  initialScale: 1,
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://terra-studio.vercel.app'),
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: '/',
+  },
   title: {
     default: 'TERRA STUDIO | Scandinavian Ceramics & Interior Home Decor',
     template: '%s | TERRA STUDIO',
@@ -18,6 +29,7 @@ export const metadata: Metadata = {
     'minimalist home',
     'nordic design',
   ],
+  manifest: '/site.webmanifest',
   openGraph: {
     title: 'TERRA STUDIO | Scandinavian Ceramics & Interior Home Decor',
     description: 'Soft lighting, earthy textures, and architectural silhouettes handcrafted for serene modern sanctuaries.',
@@ -36,6 +48,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
+    site: '@terrastudio',
+    creator: '@terrastudio',
     title: 'TERRA STUDIO | Scandinavian Ceramics & Interior Home Decor',
     description: 'Soft lighting, earthy textures, and architectural silhouettes handcrafted for serene modern sanctuaries.',
     images: ['/og-image.jpg'],
@@ -55,6 +69,30 @@ export const metadata: Metadata = {
   },
 }
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: 'TERRA STUDIO',
+      description: 'Scandinavian Ceramics & Interior Home Decor',
+      inLanguage: 'en-US',
+    },
+    {
+      '@type': 'Store',
+      '@id': `${SITE_URL}/#store`,
+      name: 'TERRA STUDIO',
+      url: SITE_URL,
+      logo: `${SITE_URL}/icon.png`,
+      image: `${SITE_URL}/og-image.jpg`,
+      description: 'Handcrafted stoneware, sculptural vases, and warm ambient lighting rooted in Scandinavian minimalism and slow living.',
+      priceRange: '$$',
+    },
+  ],
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -62,9 +100,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full scroll-smooth antialiased">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-white text-gray-900">
         {children}
       </body>
     </html>
   )
 }
+
