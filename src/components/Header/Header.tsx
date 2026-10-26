@@ -28,23 +28,31 @@ export function Header({ onOpenSearch }: Props) {
           ))}
         </nav>
 
-        {/* Mobile menu button */}
+        {/* Mobile menu button with animated bars */}
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 transition-transform duration-400 active:scale-90"
+          className="md:hidden relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300 active:scale-90 cursor-pointer"
           aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileMenuOpen}
         >
-          {mobileMenuOpen ? (
-            <svg className="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
+          <div className="relative h-5 w-5">
+            <span
+              className={`absolute left-0 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                mobileMenuOpen ? 'top-2.5 rotate-45' : 'top-1'
+              }`}
+            />
+            <span
+              className={`absolute left-0 top-2.5 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                mobileMenuOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'
+              }`}
+            />
+            <span
+              className={`absolute left-0 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                mobileMenuOpen ? 'top-2.5 -rotate-45' : 'top-4'
+              }`}
+            />
+          </div>
         </button>
 
         {/* Center Store Title / Logo */}
@@ -82,23 +90,39 @@ export function Header({ onOpenSearch }: Props) {
         </div>
       </Container>
 
-      {/* Mobile dropdown menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-b border-gray-100 bg-white px-6 py-4 shadow-lg animate-fade-in">
-          <div className="flex flex-col space-y-4">
-            {navLinks.map((link) => (
+      {/* Mobile dropdown menu with smooth expand/collapse */}
+      <div
+        style={{
+          gridTemplateRows: mobileMenuOpen ? '1fr' : '0fr',
+        }}
+        className={`md:hidden grid bg-white transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          mobileMenuOpen
+            ? 'opacity-100 border-b border-gray-100 shadow-lg'
+            : 'opacity-0 border-b border-transparent pointer-events-none'
+        }`}
+      >
+        <div className="overflow-hidden min-h-0">
+          <div className="flex flex-col space-y-4 px-6 py-5">
+            {navLinks.map((link, idx) => (
               <Link
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-medium text-gray-800 hover:text-black py-1"
+                style={{
+                  transitionDelay: mobileMenuOpen ? `${idx * 60}ms` : '0ms',
+                }}
+                className={`text-base font-medium text-gray-800 hover:text-black py-1 transition-all duration-300 ${
+                  mobileMenuOpen
+                    ? 'translate-x-0 opacity-100'
+                    : '-translate-x-3 opacity-0'
+                }`}
               >
                 {link.label}
               </Link>
             ))}
           </div>
         </div>
-      )}
+      </div>
     </header>
   )
 }
