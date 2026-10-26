@@ -16,6 +16,9 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
   const [baseTranslateX, setBaseTranslateX] = useState(0)
   const [dragOffset, setDragOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPageVisible, setIsPageVisible] = useState(true)
+  const [resetKey, setResetKey] = useState(0)
 
   const trackRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -28,6 +31,7 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
   const capturedPointerId = useRef<number | null>(null)
   const swipeThreshold = 50
   const dragActivationThreshold = 8
+  const AUTOSLIDE_INTERVAL = 4500
 
   const totalSlides = productsData.length
   const canGoPrev = currentSlide > 1
@@ -38,6 +42,14 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
     return item ? item.offsetLeft : 0
   }, [])
 
+  const goToSlide = useCallback((slideIndex: number) => {
+    const targetOffset = getSlideOffset(slideIndex)
+    setCurrentSlide(slideIndex)
+    setBaseTranslateX(targetOffset)
+    setDragOffset(0)
+    setResetKey((prev) => prev + 1)
+  }, [getSlideOffset])
+
   useEffect(() => {
     const handleResize = () => {
       setBaseTranslateX(getSlideOffset(currentSlide))
@@ -47,23 +59,26 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
     return () => window.removeEventListener('resize', handleResize)
   }, [currentSlide, getSlideOffset])
 
+  // Track page visibility to pause autoslide when tab is inactive
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(document.visibilityState === 'visible')
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [])
+
   const handlePrev = useCallback(() => {
     if (currentSlide > 1) {
-      const next = currentSlide - 1
-      setCurrentSlide(next)
-      setBaseTranslateX(getSlideOffset(next))
-      setDragOffset(0)
+      goToSlide(currentSlide - 1)
     }
-  }, [currentSlide, getSlideOffset])
+  }, [currentSlide, goToSlide])
 
   const handleNext = useCallback(() => {
     if (currentSlide < totalSlides) {
-      const next = currentSlide + 1
-      setCurrentSlide(next)
-      setBaseTranslateX(getSlideOffset(next))
-      setDragOffset(0)
+      goToSlide(currentSlide + 1)
     }
-  }, [currentSlide, totalSlides, getSlideOffset])
+  }, [currentSlide, totalSlides, goToSlide])
 
   const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (totalSlides <= 1) return
@@ -149,10 +164,7 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
         nextSlide = currentSlide - 1
       }
 
-      const targetOffset = getSlideOffset(nextSlide)
-      setCurrentSlide(nextSlide)
-      setBaseTranslateX(targetOffset)
-      setDragOffset(0)
+      goToSlide(nextSlide)
 
       setTimeout(() => {
         hasMoved.current = false
@@ -203,13 +215,12 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
     }
   }
 
-  const goToSlide = useCallback((slideIndex: number) => {
-    const targetOffset = getSlideOffset(slideIndex)
-    setCurrentSlide(slideIndex)
-    setBaseTranslateX(targetOffset)
-    setDragOffset(0)
-  }, [getSlideOffset])
+  const handleAdvance = useCallback(() => {
+    const next = currentSlide < totalSlides ? currentSlide + 1 : 1
+    goToSlide(next)
+  }, [currentSlide, totalSlides, goToSlide])
 
+  const isPaused = !isPlaying || isDragging || !isPageVisible
   const currentTranslate = baseTranslateX + dragOffset
 
   return (
@@ -284,40 +295,137 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
           </div>
         </div>
 
-        {/* Carousel Dots Pagination */}
-        {totalSlides > 1 && (
-          <div
-            className="mt-8 flex items-center justify-center gap-1.5"
-            role="tablist"
-            aria-label="Featured products pagination"
-          >
-            {Array.from({ length: totalSlides }).map((_, idx) => {
-              const slideNum = idx + 1
-              const isActive = currentSlide === slideNum
-              return (
-                <button
-                  key={slideNum}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-label={`Go to slide ${slideNum}`}
-                  onClick={() => goToSlide(slideNum)}
-                  className="group flex h-8 w-8 items-center justify-center cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-black"
-                >
-                  <span
-                    className={`block rounded-full transition-all duration-300 ${
-                      isActive
-                        ? 'w-6 h-2 bg-gray-950'
-                        : 'w-2 h-2 bg-gray-300 group-hover:bg-gray-400'
-                    }`}
-                  />
-                </button>
-              )
-            })}
-          </div>
-        )}
+        {/* Carousel Dots Pagination with 1 to 100% Fill Effect & Play/Pause */}
+        <CarouselDots
+          totalSlides={totalSlides}
+          currentSlide={currentSlide}
+          isPlaying={isPlaying}
+          isPaused={isPaused}
+          interval={AUTOSLIDE_INTERVAL}
+          onTogglePlay={() => setIsPlaying((prev) => !prev)}
+          onSelectSlide={goToSlide}
+          onAdvance={handleAdvance}
+        />
       </Container>
     </section>
+  )
+}
+
+interface CarouselDotsProps {
+  totalSlides: number
+  currentSlide: number
+  isPlaying: boolean
+  isPaused: boolean
+  interval: number
+  onTogglePlay: () => void
+  onSelectSlide: (slideIndex: number) => void
+  onAdvance: () => void
+}
+
+function CarouselDots({
+  totalSlides,
+  currentSlide,
+  isPlaying,
+  isPaused,
+  interval,
+  onTogglePlay,
+  onSelectSlide,
+  onAdvance,
+}: CarouselDotsProps) {
+  const [progress, setProgress] = useState(0)
+  const progressRef = useRef(0)
+
+  // Reset progress whenever currentSlide changes
+  useEffect(() => {
+    progressRef.current = 0
+    setProgress(0)
+  }, [currentSlide])
+
+  // Continuous timer that fills from 0 to 100% and triggers onAdvance
+  useEffect(() => {
+    if (totalSlides <= 1 || isPaused) return
+
+    const tickMs = 25
+    const step = (tickMs / interval) * 100
+
+    const timer = setInterval(() => {
+      progressRef.current += step
+      if (progressRef.current >= 100) {
+        progressRef.current = 0
+        setProgress(0)
+        onAdvance()
+      } else {
+        setProgress(progressRef.current)
+      }
+    }, tickMs)
+
+    return () => clearInterval(timer)
+  }, [totalSlides, isPaused, interval, onAdvance])
+
+  if (totalSlides <= 1) return null
+
+  return (
+    <div className="mt-8 flex items-center justify-center gap-2.5 sm:gap-3">
+      {/* Play / Pause Toggle Button */}
+      <button
+        type="button"
+        onClick={onTogglePlay}
+        aria-label={isPlaying ? 'Pause autoslide' : 'Start autoslide'}
+        className="flex h-8 w-8 items-center justify-center rounded-full text-gray-700 hover:text-black hover:bg-gray-100 transition focus-visible:outline-2 focus-visible:outline-black cursor-pointer shrink-0"
+      >
+        {isPlaying ? (
+          <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6" y="4" width="4" height="16" rx="1" />
+            <rect x="14" y="4" width="4" height="16" rx="1" />
+          </svg>
+        ) : (
+          <svg className="h-3.5 w-3.5 fill-current translate-x-0.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 4.75a1 1 0 011.53-.85l12 7.25a1 1 0 010 1.7l-12 7.25A1 1 0 016 19.25V4.75z" />
+          </svg>
+        )}
+      </button>
+
+      {/* Dots List */}
+      <div
+        className="flex items-center gap-1.5"
+        role="tablist"
+        aria-label="Featured products pagination"
+      >
+        {Array.from({ length: totalSlides }).map((_, idx) => {
+          const slideNum = idx + 1
+          const isActive = currentSlide === slideNum
+          return (
+            <button
+              key={slideNum}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-label={`Go to slide ${slideNum}`}
+              onClick={() => onSelectSlide(slideNum)}
+              className="group flex h-8 items-center justify-center cursor-pointer rounded-full px-1 focus-visible:outline-2 focus-visible:outline-black"
+            >
+              <span
+                className={`relative block h-2 rounded-full overflow-hidden transition-all duration-300 ${
+                  isActive
+                    ? 'w-8 sm:w-10 bg-gray-200'
+                    : 'w-2 bg-gray-300 group-hover:bg-gray-400'
+                }`}
+              >
+                {isActive && (
+                  <span
+                    className="absolute inset-y-0 left-0 bg-gray-950 rounded-full h-full"
+                    style={{
+                      width: `${Math.min(progress, 100)}%`,
+                      transition: isPaused ? 'none' : 'width 25ms linear',
+                    }}
+                  />
+                )}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
