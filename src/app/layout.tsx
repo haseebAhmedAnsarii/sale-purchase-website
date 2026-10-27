@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata, Viewport } from 'next'
 import { SmoothScroll } from '@/components/SmoothScroll'
 import { NavigationProgressBar } from '@/components/NavigationProgressBar'
+import { BackToTop } from '@/components/BackToTop'
 import './globals.css'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
@@ -171,7 +172,11 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <NavigationProgressBar />
         </Suspense>
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          {children}
+          <BackToTop />
+        </SmoothScroll>
+        <div className="paper-grain-overlay" aria-hidden="true" />
       </body>
     </html>
   )
