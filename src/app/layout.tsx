@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { SmoothScroll } from '@/components/SmoothScroll'
 import './globals.css'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
@@ -110,7 +111,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="h-full scroll-smooth antialiased">
+    <html lang="en" className="h-full antialiased">
       <head>
         <script
           type="application/ld+json"
@@ -118,7 +119,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-white text-gray-900">
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   )
