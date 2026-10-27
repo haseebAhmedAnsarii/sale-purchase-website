@@ -13,9 +13,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: '/',
+    languages: {
+      'en-US': '/',
+      'x-default': '/',
+    },
   },
   title: {
-    default: 'TERRA STUDIO | Scandinavian Ceramics & Home Decor',
+    default: 'TERRA STUDIO | Scandinavian Ceramics & Modern Home Decor',
     template: '%s | TERRA STUDIO',
   },
   description: 'Handcrafted stoneware, sculptural vases, and warm ambient lighting rooted in Scandinavian minimalism and slow living.',
@@ -31,7 +35,7 @@ export const metadata: Metadata = {
   ],
   manifest: '/site.webmanifest',
   openGraph: {
-    title: 'TERRA STUDIO | Scandinavian Ceramics & Home Decor',
+    title: 'TERRA STUDIO | Scandinavian Ceramics & Modern Home Decor',
     description: 'Soft lighting, earthy textures, and architectural silhouettes handcrafted for serene modern sanctuaries.',
     url: '/',
     siteName: 'TERRA STUDIO',
@@ -50,7 +54,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@terrastudio',
     creator: '@terrastudio',
-    title: 'TERRA STUDIO | Scandinavian Ceramics & Home Decor',
+    title: 'TERRA STUDIO | Scandinavian Ceramics & Modern Home Decor',
     description: 'Soft lighting, earthy textures, and architectural silhouettes handcrafted for serene modern sanctuaries.',
     images: [
       {
@@ -82,18 +86,20 @@ const jsonLd = {
       '@id': `${SITE_URL}/#website`,
       url: SITE_URL,
       name: 'TERRA STUDIO',
-      description: 'Scandinavian Ceramics & Interior Home Decor',
+      description: 'Scandinavian Ceramics & Modern Home Decor',
       inLanguage: 'en-US',
+      publisher: {
+        '@id': `${SITE_URL}/#organization`,
+      },
     },
     {
-      '@type': 'Store',
-      '@id': `${SITE_URL}/#store`,
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
       name: 'TERRA STUDIO',
       url: SITE_URL,
       logo: `${SITE_URL}/icon.png`,
       image: `${SITE_URL}/og-image.jpg`,
       description: 'Handcrafted stoneware, sculptural vases, and warm ambient lighting rooted in Scandinavian minimalism and slow living.',
-      priceRange: '$$',
     },
   ],
 }

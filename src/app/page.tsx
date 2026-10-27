@@ -6,6 +6,7 @@ import { Hero } from '@/components/Hero'
 import { FeaturedProducts } from '@/components/FeaturedProducts'
 import { PromoBanner } from '@/components/PromoBanner'
 import { Collections } from '@/components/Collections'
+import { CraftStory } from '@/components/CraftStory'
 import { Footer } from '@/components/Footer'
 import { SearchModal } from '@/components/SearchModal'
 
@@ -30,6 +31,9 @@ export default function HomePage() {
 
         {/* Collections */}
         <Collections />
+
+        {/* Craftsmanship & Brand Story (SEO Content & FAQ) */}
+        <CraftStory />
       </main>
 
       {/* Footer without Contact, Resources, or Visa row */}
