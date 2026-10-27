@@ -323,7 +323,7 @@ export function ProductDetailClient({ product }: Props) {
           {recentlyViewed.length > 0 && (
             <ScrollReveal>
               <section
-                className="mt-16 sm:mt-24 border-t border-gray-100 pt-12 sm:pt-16"
+                className="mt-8 sm:mt-12 border-t border-gray-100 pt-8 sm:pt-10"
                 aria-label="Recently viewed pieces"
               >
                 <div className="mb-6 sm:mb-8">

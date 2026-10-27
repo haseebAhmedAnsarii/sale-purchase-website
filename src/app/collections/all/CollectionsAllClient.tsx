@@ -128,7 +128,7 @@ export function CollectionsAllClient() {
           {/* Recently Viewed Section */}
           {recentlyViewed.length > 0 && (
             <section
-              className="mt-16 sm:mt-24 border-t border-gray-100 pt-12 sm:pt-16"
+              className="mt-12 sm:mt-16 border-t border-gray-100 pt-10 sm:pt-12"
               aria-label="Recently viewed pieces"
             >
               <div className="flex items-baseline justify-between mb-6 sm:mb-8">
