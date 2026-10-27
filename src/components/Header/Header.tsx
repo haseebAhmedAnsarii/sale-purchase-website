@@ -1,7 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
+import { useLenis } from 'lenis/react'
 import { Container } from '../Container'
 import { SearchModal } from '../SearchModal'
 import { navLinks, businessName } from '@/data/navigation'
@@ -15,12 +17,76 @@ export function Header({ onOpenSearch }: Props) {
   const [internalSearchOpen, setInternalSearchOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+  const lenis = useLenis()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Lock background scroll and Lenis completely when mobile menu is opened
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+
+    lenis?.stop()
+    const originalBodyOverflow = document.body.style.overflow
+    const originalBodyPadding = document.body.style.paddingRight
+    const originalHtmlOverflow = document.documentElement.style.overflow
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
+
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    if (scrollBarWidth > 0) {
+      document.body.style.paddingRight = `${scrollBarWidth}px`
+    }
+
+    // Cancel any wheel or touchmove outside the mobile menu to completely freeze background
+    const preventBackgroundScroll = (e: TouchEvent | WheelEvent) => {
+      if (mobileMenuRef.current && mobileMenuRef.current.contains(e.target as Node)) {
+        return
+      }
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false)
+      }
+    }
+
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('wheel', preventBackgroundScroll, { passive: false })
+    window.addEventListener('touchmove', preventBackgroundScroll, { passive: false })
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow
+      document.body.style.paddingRight = originalBodyPadding
+      document.documentElement.style.overflow = originalHtmlOverflow
+      window.removeEventListener('wheel', preventBackgroundScroll)
+      window.removeEventListener('touchmove', preventBackgroundScroll)
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('resize', handleResize)
+      lenis?.start()
+    }
+  }, [mobileMenuOpen, lenis])
 
   useEffect(() => {
     let lastScrollY = window.scrollY
     let ticking = false
 
     const updateScroll = () => {
+      if (mobileMenuOpen) return
+
       const currentScrollY = Math.max(0, window.scrollY)
       const diff = currentScrollY - lastScrollY
 
@@ -31,7 +97,7 @@ export function Header({ onOpenSearch }: Props) {
       if (currentScrollY <= 80) {
         setIsVisible(true)
         lastScrollY = currentScrollY
-      } else if (diff > 10 && !mobileMenuOpen) {
+      } else if (diff > 10) {
         // Scrolled down -> smoothly hide
         setIsVisible(false)
         lastScrollY = currentScrollY
@@ -153,6 +219,8 @@ export function Header({ onOpenSearch }: Props) {
 
       {/* Mobile dropdown menu with smooth expand/collapse */}
       <div
+        ref={mobileMenuRef}
+        data-lenis-prevent
         style={{
           gridTemplateRows: mobileMenuOpen ? '1fr' : '0fr',
         }}
@@ -162,7 +230,7 @@ export function Header({ onOpenSearch }: Props) {
             : 'opacity-0 border-b border-transparent pointer-events-none'
         }`}
       >
-        <div className="overflow-hidden min-h-0">
+        <div className="overflow-y-auto max-h-[calc(100dvh-5rem)] min-h-0" data-lenis-prevent>
           <div className="flex flex-col space-y-4 px-6 py-5">
             {navLinks.map((link, idx) => (
               <Link
@@ -184,6 +252,17 @@ export function Header({ onOpenSearch }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Backdrop overlay for mobile menu to catch any clicks/touch and block background */}
+      {mounted && mobileMenuOpen && createPortal(
+        <div
+          className="fixed inset-0 top-16 sm:top-20 z-30 bg-black/35 backdrop-blur-xs transition-opacity duration-300 md:hidden animate-fade-in"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+          data-lenis-prevent
+        />,
+        document.body
+      )}
 
       {/* Internal Search Modal when not controlled externally */}
       {!onOpenSearch && (
