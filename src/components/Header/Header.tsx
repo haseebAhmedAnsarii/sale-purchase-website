@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Container } from '../Container'
 import { SearchModal } from '../SearchModal'
@@ -13,6 +13,47 @@ interface Props {
 export function Header({ onOpenSearch }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [internalSearchOpen, setInternalSearchOpen] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY
+    let ticking = false
+
+    const updateScroll = () => {
+      const currentScrollY = Math.max(0, window.scrollY)
+      const diff = currentScrollY - lastScrollY
+
+      // Subtle shadow when scrolled past top
+      setIsScrolled(currentScrollY > 20)
+
+      // Always reveal near top of page
+      if (currentScrollY <= 80) {
+        setIsVisible(true)
+        lastScrollY = currentScrollY
+      } else if (diff > 10 && !mobileMenuOpen) {
+        // Scrolled down -> smoothly hide
+        setIsVisible(false)
+        lastScrollY = currentScrollY
+      } else if (diff < -10) {
+        // Scrolled up -> smoothly reveal
+        setIsVisible(true)
+        lastScrollY = currentScrollY
+      }
+
+      ticking = false
+    }
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScroll)
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [mobileMenuOpen])
 
   const handleSearchClick = () => {
     if (onOpenSearch) {
@@ -22,8 +63,18 @@ export function Header({ onOpenSearch }: Props) {
     }
   }
 
+  const showHeader = isVisible || mobileMenuOpen
+
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 transition-colors">
+    <header
+      className={`sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 will-change-[transform,translate] transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isScrolled ? 'shadow-sm' : ''
+      } ${
+        showHeader
+          ? 'translate-y-0 opacity-100'
+          : '-translate-y-full opacity-0 pointer-events-none'
+      }`}
+    >
       <Container className="flex h-16 sm:h-20 items-center justify-between">
         {/* Left Navigation */}
         <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
