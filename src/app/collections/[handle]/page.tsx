@@ -4,7 +4,10 @@ import type { Metadata } from 'next'
 import { collectionsData } from '@/data/collections'
 import { productsData } from '@/data/products'
 import { getCollectionSlug } from '@/utils/collection'
+import { getProductSlug } from '@/utils/product'
 import { CollectionDetailClient } from './CollectionDetailClient'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
 
 interface PageProps {
   params: Promise<{
@@ -90,7 +93,74 @@ async function CollectionDetails({
     collection.productIds?.includes(product.id)
   )
 
-  return <CollectionDetailClient collection={collection} products={products} />
+  const collectionUrl = `${SITE_URL}/collections/${handle}`
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${collectionUrl}#webpage`,
+        url: collectionUrl,
+        name: collection.title,
+        description: collection.description,
+        datePublished: '2026-01-01T00:00:00Z',
+        dateModified: '2026-10-27T00:00:00Z',
+        isPartOf: {
+          '@type': 'WebSite',
+          '@id': `${SITE_URL}/#website`,
+          name: 'TERRA STUDIO',
+        },
+      },
+      {
+        '@type': 'ItemList',
+        '@id': `${collectionUrl}#itemlist`,
+        name: collection.title,
+        description: collection.description,
+        numberOfItems: products.length,
+        itemListElement: products.map((prod, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: prod.title,
+          url: `${SITE_URL}/products/${getProductSlug(prod)}`,
+        })),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${collectionUrl}#breadcrumbs`,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: SITE_URL,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Collections',
+            item: `${SITE_URL}/collections/all`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: collection.title,
+            item: collectionUrl,
+          },
+        ],
+      },
+    ],
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <CollectionDetailClient collection={collection} products={products} />
+    </>
+  )
 }
 
 export default function CollectionPage({ params }: PageProps) {

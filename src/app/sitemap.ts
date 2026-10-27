@@ -7,9 +7,9 @@ import { getCollectionSlug } from '@/utils/collection'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ['', '/collections/all'].map((route) => ({
+  const routes = ['', '/collections/all', '/about'].map((route) => ({
     url: `${SITE_URL}${route}`,
-    lastModified: new Date(),
+    lastModified: new Date('2026-10-27T00:00:00Z'),
     changeFrequency: 'weekly' as const,
     priority: route === '' ? 1.0 : 0.8,
   }))

@@ -3,14 +3,24 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Container } from '../Container'
+import { SearchModal } from '../SearchModal'
 import { navLinks, businessName } from '@/data/navigation'
 
 interface Props {
-  onOpenSearch: () => void
+  onOpenSearch?: () => void
 }
 
 export function Header({ onOpenSearch }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [internalSearchOpen, setInternalSearchOpen] = useState(false)
+
+  const handleSearchClick = () => {
+    if (onOpenSearch) {
+      onOpenSearch()
+    } else {
+      setInternalSearchOpen(true)
+    }
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 transition-colors">
@@ -69,7 +79,7 @@ export function Header({ onOpenSearch }: Props) {
         <div className="flex shrink-0 items-center justify-end">
           <button
             type="button"
-            onClick={onOpenSearch}
+            onClick={handleSearchClick}
             className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-gray-800 hover:bg-gray-100 transition-all duration-400 hover:scale-105 active:scale-95"
             aria-label="Search store"
           >
@@ -123,6 +133,14 @@ export function Header({ onOpenSearch }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Internal Search Modal when not controlled externally */}
+      {!onOpenSearch && (
+        <SearchModal
+          isOpen={internalSearchOpen}
+          onClose={() => setInternalSearchOpen(false)}
+        />
+      )}
     </header>
   )
 }

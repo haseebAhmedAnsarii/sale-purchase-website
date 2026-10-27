@@ -3,6 +3,7 @@ import type { QuickLink } from '@/types'
 // Footer quick links
 export const footerQuickLinks: QuickLink[] = [
   { label: 'Home', href: '/' },
+  { label: 'About the Studio', href: '/about' },
   { label: 'All Products', href: '/collections/all' },
   { label: 'Stoneware & Dining', href: '/collections/stoneware-dining' },
   { label: 'Sculptural Vases', href: '/collections/sculptural-vases' },

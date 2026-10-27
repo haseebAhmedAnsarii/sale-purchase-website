@@ -77,6 +77,10 @@ export const metadata: Metadata = {
       { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
+  other: {
+    'og:updated_time': '2026-10-27T00:00:00Z',
+    'article:modified_time': '2026-10-27T00:00:00Z',
+  },
 }
 
 const jsonLd = {
@@ -89,6 +93,8 @@ const jsonLd = {
       name: 'TERRA STUDIO',
       description: 'Scandinavian Ceramics & Modern Home Decor',
       inLanguage: 'en-US',
+      datePublished: '2026-01-01T00:00:00Z',
+      dateModified: '2026-10-27T00:00:00Z',
       publisher: {
         '@id': `${SITE_URL}/#organization`,
       },
@@ -101,6 +107,38 @@ const jsonLd = {
       logo: `${SITE_URL}/icon.png`,
       image: `${SITE_URL}/og-image.jpg`,
       description: 'Handcrafted stoneware, sculptural vases, and warm ambient lighting rooted in Scandinavian minimalism and slow living.',
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${SITE_URL}/#faq`,
+      datePublished: '2026-01-01T00:00:00Z',
+      dateModified: '2026-10-27T00:00:00Z',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How should I care for handcrafted stoneware and unglazed terracotta?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'All glazed stoneware plates and bowls are dishwasher and microwave safe. For unglazed sculptural vases and raw terra cotta vessels, we recommend hand washing with warm water and mild botanical soap to preserve natural surface patinas. Travertine trays should be wiped clean with a damp cloth and mild neutral pH soap.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What defines the Scandinavian slow living philosophy behind your decor?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Slow living centers on curating fewer, more meaningful objects that elevate daily rituals. Rather than transient seasonal decor, our ceramics, lamps, and linen throws are designed to age gracefully alongside you, grounding living rooms, dining tables, and bedrooms with tactile simplicity and timeless serenity.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Are your organic linen throws and bouclé textiles sustainably crafted?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. Our linen is woven exclusively from OEKO-TEX Standard 100 certified European flax cultivated without harmful synthetic pesticides. Pre-washed with natural pumice stones for immediate cloud-soft drape, our throws provide breathable, hypoallergenic year-round insulation.',
+          },
+        },
+      ],
     },
   ],
 }

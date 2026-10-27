@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useId, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useLenis } from 'lenis/react'
@@ -20,8 +21,13 @@ const MAX_SEARCH_RESULTS = 4
 
 export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
   const [query, setQuery] = useState('')
+  const [mounted, setMounted] = useState(false)
   const searchInputId = useId()
   const lenis = useLenis()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Prevent background and Lenis scroll when search modal is open
   useEffect(() => {
@@ -81,11 +87,11 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
   // Top 3 curated popular picks when query is empty
   const popularPicks = useMemo(() => productsData.slice(0, 3), [])
 
-  if (!isOpen) return null
+  if (!isOpen || !mounted) return null
 
   const isSearching = query.trim().length > 0
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 backdrop-blur-xs pt-[10vh] px-4 transition-opacity animate-fade-in"
       onClick={onClose}
@@ -306,6 +312,7 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
