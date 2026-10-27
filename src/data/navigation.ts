@@ -6,4 +6,5 @@ export const businessName = 'TERRA STUDIO'
 export const navLinks: NavLink[] = [
   { label: 'Home', href: '/' },
   { label: 'Catalog', href: '/collections/all' },
+  { label: 'About', href: '/about' },
 ]
