@@ -37,14 +37,14 @@ export function Footer() {
               <p className="mt-4 text-xs text-gray-400 leading-relaxed max-w-md">
                 {footerInfo.note}
               </p>
-              <p className="mt-3 text-xs text-gray-500 leading-relaxed max-w-md">
+              <p className="mt-3 text-xs text-gray-400 leading-relaxed max-w-md">
                 Rooted in Danish minimalism and tactile Japanese wabi-sabi philosophy, our objects are shaped slowly by hand using mineral clays, natural linen fibers, and solid brushed metals.
               </p>
             </div>
           </div>
 
           {/* Footer Bottom Row */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.6875rem] text-gray-500">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.6875rem] text-gray-400">
             <p>{footerInfo.copyright}</p>
             <p>Slow Living • Handcrafted Ceramics • Nordic Craftsmanship</p>
           </div>

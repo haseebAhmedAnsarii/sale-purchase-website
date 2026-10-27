@@ -65,7 +65,7 @@ export function ProductCard({ product, onClick }: Props) {
           </span>
 
           {product.compareAtPrice && (
-            <span className="text-xs text-gray-400 line-through">
+            <span className="text-xs text-gray-600 line-through">
               ${product.compareAtPrice.toFixed(2)}
             </span>
           )}

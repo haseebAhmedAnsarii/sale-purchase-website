@@ -241,9 +241,9 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
 
             {totalSlides > 1 && (
               <div className="flex items-center gap-3">
-                <span className="font-mono text-xs tracking-wider text-gray-400 select-none">
+                <span className="font-mono text-xs tracking-wider text-gray-600 select-none">
                   <span className="font-semibold text-gray-900">{String(currentSlide).padStart(2, '0')}</span>
-                  <span className="mx-1 text-gray-300">/</span>
+                  <span className="mx-1 text-gray-400" aria-hidden="true">/</span>
                   <span>{String(totalSlides).padStart(2, '0')}</span>
                 </span>
 
@@ -429,7 +429,7 @@ function CarouselProgressBar({
             </svg>
           )}
         </button>
-        <span className="text-[0.6875rem] uppercase tracking-wider font-medium text-gray-400 hidden sm:inline">
+        <span className="text-[0.6875rem] uppercase tracking-wider font-medium text-gray-600 hidden sm:inline">
           {isPlaying ? 'Autoplay' : 'Paused'}
         </span>
       </div>

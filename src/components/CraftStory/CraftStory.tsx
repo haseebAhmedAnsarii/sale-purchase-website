@@ -52,7 +52,7 @@ export function CraftStory() {
         {/* Editorial Section Heading */}
         <ScrollReveal>
           <div className="max-w-3xl mb-14 sm:mb-20">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#8c735f] mb-3 block">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#765b48] mb-3 block">
               The Philosophy of Slow Living
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-gray-950 leading-tight">
@@ -69,7 +69,7 @@ export function CraftStory() {
           {pillars.map((pillar, idx) => (
             <ScrollReveal key={pillar.number} delay={idx * 120}>
               <div className="flex flex-col h-full bg-white p-6 sm:p-8 rounded-xs shadow-xs border border-gray-100">
-                <span className="font-mono text-xs font-bold text-[#8c735f] mb-4">
+                <span className="font-mono text-xs font-bold text-[#765b48] mb-4">
                   {pillar.number}
                 </span>
                 <h3 className="text-lg font-bold text-gray-950 mb-3">

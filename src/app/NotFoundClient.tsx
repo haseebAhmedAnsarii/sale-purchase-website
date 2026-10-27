@@ -25,8 +25,8 @@ export function NotFoundClient() {
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             {/* Ceramic Silhouette Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#f4f2ef] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#8c735f] mb-6">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#8c735f]" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#f4f2ef] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#765b48] mb-6">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#765b48]" />
               <span>404 • Page Not Found</span>
             </div>
 

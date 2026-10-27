@@ -111,7 +111,7 @@ export function ProductDetailClient({ product }: Props) {
                   ${product.price.toFixed(2)}
                 </span>
                 {product.compareAtPrice && (
-                  <span className="text-base text-gray-400 line-through">
+                  <span className="text-base text-gray-600 line-through">
                     ${product.compareAtPrice.toFixed(2)}
                   </span>
                 )}
