@@ -232,8 +232,8 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
       aria-label="Featured products"
     >
       <Container>
+        {/* Section Heading with Slide Counter and Arrow Controls */}
         <ScrollReveal>
-          {/* Section Heading with Slide Counter and Arrow Controls */}
           <div className="mb-6 sm:mb-8 flex items-center justify-between">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
               Featured products
@@ -274,6 +274,7 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
               </div>
             )}
           </div>
+        </ScrollReveal>
 
         {/* Slider Carousel Area */}
         <div
@@ -323,10 +324,12 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
                   aria-roledescription="slide"
                   aria-label={`Slide ${idx + 1} of ${totalSlides}`}
                 >
-                  <ProductCard
-                    product={product}
-                    onClick={onSelectProduct}
-                  />
+                  <ScrollReveal className="h-full flex flex-col" delay={idx * 100}>
+                    <ProductCard
+                      product={product}
+                      onClick={onSelectProduct}
+                    />
+                  </ScrollReveal>
                 </div>
               ))}
             </div>
@@ -334,16 +337,17 @@ export function FeaturedProducts({ onSelectProduct }: Props) {
         </div>
 
         {/* Minimalist Progress Bar & Autoplay Controls */}
-        <CarouselProgressBar
-          totalSlides={totalSlides}
-          currentSlide={currentSlide}
-          isPlaying={isPlaying}
-          isPaused={isPaused}
-          interval={AUTOSLIDE_INTERVAL}
-          onTogglePlay={() => setIsPlaying((prev) => !prev)}
-          onSelectSlide={goToSlide}
-          onAdvance={handleAdvance}
-        />
+        <ScrollReveal delay={350}>
+          <CarouselProgressBar
+            totalSlides={totalSlides}
+            currentSlide={currentSlide}
+            isPlaying={isPlaying}
+            isPaused={isPaused}
+            interval={AUTOSLIDE_INTERVAL}
+            onTogglePlay={() => setIsPlaying((prev) => !prev)}
+            onSelectSlide={goToSlide}
+            onAdvance={handleAdvance}
+          />
         </ScrollReveal>
       </Container>
     </section>

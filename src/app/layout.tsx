@@ -155,6 +155,15 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <noscript>
+          <style>{`
+            [data-scroll-reveal],
+            .opacity-0 {
+              opacity: 1 !important;
+              transform: none !important;
+            }
+          `}</style>
+        </noscript>
       </head>
       <body className="min-h-full flex flex-col bg-white text-gray-900">
         <SmoothScroll>{children}</SmoothScroll>

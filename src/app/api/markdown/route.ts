@@ -5,8 +5,9 @@ import { getProductSlug } from '@/utils/product'
 import { getCollectionSlug } from '@/utils/collection'
 
 export async function GET(request: Request) {
+  const headerPath = request.headers.get('x-markdown-path')
   const { searchParams } = new URL(request.url)
-  const path = searchParams.get('path') || '/'
+  const path = headerPath || searchParams.get('path') || '/'
   const cleanPath = path.replace(/\/$/, '') || '/'
 
   let markdown = ''

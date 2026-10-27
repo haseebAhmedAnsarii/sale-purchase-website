@@ -1,0 +1,70 @@
+# TERRA STUDIO | Full Context Document
+
+> Handcrafted Scandinavian stoneware ceramics, sculptural minimalist vases, organic linen textiles, and warm ambient lighting.
+
+## Studio Philosophy & Ethos
+Founded as an online design sanctuary, TERRA STUDIO operates at the intersection of architectural discipline and organic craft. Our mission is to counter transient consumer decor by creating heirloom vessels and tableware shaped slowly by hand.
+Our creative language balances the clean geometric proportions of Danish functionalism with the serene acceptance of natural imperfection found in Japanese wabi-sabi aesthetics. Rather than striving for machine sterility, we celebrate the subtle iron flecks that surface during high-fire kilning, the soft variations of hand-dipped mineral glazes, and the tactile grain of untreated stone.
+
+## Materials & Sourcing
+- **European Mineral Clays**: Sourced from historic European riverbeds and twice-fired at 1,280°C to achieve vitrified density, chip resistance, and organic matte surfaces.
+- **Certified Flax Linen**: Woven exclusively from OEKO-TEX Standard 100 certified European flax fibers and stone-washed with natural pumice for cloud-soft drape.
+- **Brushed Solid Brass**: Machined solid brass components without artificial synthetic sealants, engineered to develop an authentic golden-amber patina over generations.
+- **Natural Travertine**: Honed Roman travertine stone featuring organic porous cavities and warm beige tones.
+
+## Curated Collections
+1. **Stoneware Dining** (/collections/stoneware-dining): Twice-fired dinner plates, pasta bowls, and breakfast sets.
+2. **Sculptural Vases** (/collections/sculptural-vases): Hand-thrown sculptural centerpieces and raw terracotta vessels.
+3. **Ambient Lighting** (/collections/ambient-lighting): Warm 2700K solid brass table lamps and opal glass diffusers.
+4. **Living Textiles** (/collections/living-textiles): Heavyweight European flax throws and bouclé accent pillows.
+5. **Curated Objects** (/collections/curated-objects): Travertine catchall trays and sculptural taper candle holders.
+
+## Complete Product Catalog
+
+### 1. Speckled Ceramic Dinner Plate Set
+- **URL**: https://shariq-terra-studio-website.vercel.app/products/speckled-ceramic-dinner-plate-set
+- **Price**: $145.00 (Compare at: $165.00, On Sale)
+- **Collection**: Stoneware Dining
+- **Description**: Hand-thrown stoneware plates finished with a subtle iron-speckled matte oatmeal glaze. Designed with an organic rim that brings tactile warmth and refined Scandinavian simplicity to your dining table.
+- **Features**: Set of 4 handcrafted plates (10.5" diameter) • Mineral-rich durable stoneware clay • Dishwasher and microwave safe • Matte speckled glaze with exposed rim
+
+### 2. Fluted Matte Terra Cotta Vase
+- **URL**: https://shariq-terra-studio-website.vercel.app/products/fluted-matte-terra-cotta-vase
+- **Price**: $115.00
+- **Collection**: Sculptural Vases
+- **Description**: An architectural vase featuring rhythmic vertical fluting in unglazed natural terra cotta. Its porous, earthy texture celebrates the raw warmth of mineral clay, perfect for dry floral stems or as a standalone sculptural object.
+- **Features**: Hand-cast natural red terracotta • Textured unglazed exterior with sealed interior • Height: 11" (28 cm), Diameter: 6" (15 cm) • Watertight for fresh blooms or dried botanicals
+
+### 3. Brushed Brass Accent Lamp
+- **URL**: https://shariq-terra-studio-website.vercel.app/products/brushed-brass-accent-lamp
+- **Price**: $210.00 (Compare at: $240.00, On Sale)
+- **Collection**: Ambient Lighting
+- **Description**: A monolithic accent lamp crafted from solid brushed brass with a mouth-blown frosted opal glass shade. Casts a soft, diffused 2700K warm glow designed for bedside tables, credenzas, and reading nooks.
+- **Features**: Solid spun brass base with anti-oxidation wax seal • Handblown matte opal glass diffuser • Inline brass rotary dimmer switch • Includes 4W warm-white G9 LED bulb (2700K)
+
+### 4. Woven Organic Linen Throw
+- **URL**: https://shariq-terra-studio-website.vercel.app/products/woven-organic-linen-throw
+- **Price**: $160.00
+- **Collection**: Living Textiles
+- **Description**: Woven from 100% certified European flax and pre-washed with natural pumice stones for immediate softness. Heavyweight yet breathable, this throw features subtle eyelash fringe detailing and an understated oat hue.
+- **Features**: 100% OEKO-TEX certified European flax linen • Generous 55" x 79" (140 x 200 cm) dimensions • Stone-washed for relaxed, rumpled texture • Machine washable on gentle cold cycle
+
+### 5. Ribbed Stoneware Candle Holder
+- **URL**: https://shariq-terra-studio-website.vercel.app/products/ribbed-stoneware-candle-holder
+- **Price**: $65.00
+- **Collection**: Curated Objects
+- **Description**: A heavy stoneware taper holder featuring rhythmic turned ridges and an unglazed stone-grey finish. Designed with a deep wax well to accommodate standard beeswax and paraffin taper candles securely.
+- **Features**: Solid stoneware clay with weighted base • Fits standard 7/8" (22 mm) taper candles • Dimensions: 4.5" diameter x 3" height • Easy wax removal by freezing or warm water soak
+
+### 6. Carved Travertine Catchall Tray
+- **URL**: https://shariq-terra-studio-website.vercel.app/products/carved-travertine-catchall-tray
+- **Price**: $130.00
+- **Collection**: Curated Objects
+- **Description**: Cut and honed from monolithic beige Roman travertine, this sculptural catchall features soft dished contours and natural pitting. Ideal for jewelry, desk accessories, or ceramic accents.
+- **Features**: 100% natural solid travertine stone • Honed matte finish with smooth touch • Dimensions: 10" x 6" x 1.25" • Protective velvet pads on underside
+
+## Care Instructions
+- **Glazed Stoneware**: Dishwasher and microwave safe. Avoid sudden thermal shocks (e.g. freezer to high-heat oven).
+- **Unglazed Terracotta**: Wipe with a damp cloth and mild botanical soap. Do not scrub with abrasive metallic pads.
+- **Solid Brass**: Dust with a dry microfibre cloth. Untreated brass develops a graceful natural patina over time.
+- **Flax Linen**: Machine wash cold on delicate cycle. Tumble dry low or air dry flat to maintain organic drape.

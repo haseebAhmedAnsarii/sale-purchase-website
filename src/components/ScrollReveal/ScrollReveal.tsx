@@ -6,6 +6,7 @@ interface Props {
   children: ReactNode
   className?: string
   delay?: number
+  duration?: number
   direction?: 'up' | 'none'
   threshold?: number
 }
@@ -14,8 +15,9 @@ export function ScrollReveal({
   children,
   className = '',
   delay = 0,
+  duration = 1000,
   direction = 'up',
-  threshold = 0.1,
+  threshold = 0.15,
 }: Props) {
   const [isVisible, setIsVisible] = useState(false)
   const elementRef = useRef<HTMLDivElement>(null)
@@ -33,6 +35,13 @@ export function ScrollReveal({
     const element = elementRef.current
     if (!element) return
 
+    // Immediately reveal if already well within the initial viewport on mount
+    const rect = element.getBoundingClientRect()
+    if (rect.top <= window.innerHeight - 60 && rect.bottom >= 0) {
+      setIsVisible(true)
+      return
+    }
+
     // Fallback if IntersectionObserver is not supported
     if (!('IntersectionObserver' in window)) {
       setIsVisible(true)
@@ -48,7 +57,7 @@ export function ScrollReveal({
       },
       {
         threshold,
-        rootMargin: '0px 0px -40px 0px',
+        rootMargin: '0px 0px -70px 0px',
       }
     )
 
@@ -59,15 +68,17 @@ export function ScrollReveal({
     }
   }, [threshold])
 
-  const initialTransform = direction === 'up' ? 'translate-y-8' : ''
+  const initialTransform = direction === 'up' ? 'translate-y-6' : ''
 
   return (
     <div
       ref={elementRef}
+      data-scroll-reveal="true"
       style={{
-        transitionDelay: delay ? `${delay}ms` : undefined,
+        transitionDuration: `${duration}ms`,
+        transitionDelay: delay && isVisible ? `${delay}ms` : undefined,
       }}
-      className={`transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+      className={`transition-all ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
         isVisible
           ? 'opacity-100 translate-y-0'
           : `opacity-0 ${initialTransform}`

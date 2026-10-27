@@ -32,6 +32,13 @@ body {
   }
 }
 
+@media (scripting: none) {
+  [data-scroll-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 @theme {
   @keyframes autoslideFill {
     from {

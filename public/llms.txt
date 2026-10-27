@@ -1,29 +1,28 @@
 # TERRA STUDIO
-> Handcrafted Scandinavian stoneware ceramics, sculptural minimalist vases, organic linen textiles, and warm ambient lighting.
 
-TERRA STUDIO is a modern Nordic design studio and ceramic workshop crafting timeless tableware, vessels, and living objects rooted in Danish minimalism and tactile Japanese wabi-sabi philosophy.
+> Handcrafted Scandinavian stoneware ceramics, sculptural vases, ambient lighting, and organic textiles.
 
 ## Collections
-- [Stoneware Dining](https://shariq-terra-studio-website.vercel.app/collections/stoneware-dining): Twice-fired artisanal ceramic plates, bowls, and mugs celebrating organic speckled clay bodies.
-- [Sculptural Vases](https://shariq-terra-studio-website.vercel.app/collections/sculptural-vases): Architectural vessels, unglazed fluted terra cotta, and brutalist ceramic pedestals.
-- [Ambient Lighting](https://shariq-terra-studio-website.vercel.app/collections/ambient-lighting): Solid brushed brass table lamps and mouth-blown frosted opal glass shades casting soothing 2700K warmth.
-- [Living Textiles](https://shariq-terra-studio-website.vercel.app/collections/living-textiles): OEKO-TEX certified European flax linen throws and tactile bouclé cushions.
-- [Curated Objects](https://shariq-terra-studio-website.vercel.app/collections/curated-objects): Carved Roman travertine trays, stoneware candle holders, and organic incense burners.
-- [Complete Catalog](https://shariq-terra-studio-website.vercel.app/collections/all): All handcrafted studio pieces and limited workshop releases.
+- [Complete Catalog](https://shariq-terra-studio-website.vercel.app/collections/all): Complete catalog of ceramic dinnerware, lighting, and living objects
+- [Stoneware Dining](https://shariq-terra-studio-website.vercel.app/collections/stoneware-dining): Ceramic plates, bowls, mugs, and dining sets
+- [Sculptural Vases](https://shariq-terra-studio-website.vercel.app/collections/sculptural-vases): Ceramic vases and unglazed terracotta vessels
+- [Ambient Lighting](https://shariq-terra-studio-website.vercel.app/collections/ambient-lighting): Brass table lamps and frosted opal glass diffusers
+- [Living Textiles](https://shariq-terra-studio-website.vercel.app/collections/living-textiles): Pre-washed European flax linen throws and cushions
+- [Curated Objects](https://shariq-terra-studio-website.vercel.app/collections/curated-objects): Travertine stone trays and stoneware candleholders
 
-## Core Products
-- [Speckled Ceramic Dinner Plate Set](https://shariq-terra-studio-website.vercel.app/products/speckled-ceramic-dinner-plate-set): Four-piece stoneware dining set twice-fired at 1,280°C with subtle iron flecks ($145.00).
-- [Fluted Matte Terra Cotta Vase](https://shariq-terra-studio-website.vercel.app/products/fluted-matte-terra-cotta-vase): Unglazed sculptural vessel featuring rhythmic vertical ridges ($115.00).
-- [Brushed Brass Accent Lamp](https://shariq-terra-studio-website.vercel.app/products/brushed-brass-accent-lamp): Solid machined brass base with mouth-blown frosted opal diffuser ($210.00).
-- [Woven Organic Linen Throw](https://shariq-terra-studio-website.vercel.app/products/woven-organic-linen-throw): Pre-washed 100% European flax with handcrafted eyelash fringes ($160.00).
-- [Ribbed Stoneware Candle Holder](https://shariq-terra-studio-website.vercel.app/products/ribbed-stoneware-candle-holder): Heavy mineral-clay base designed for standard taper candles ($65.00).
-- [Carved Travertine Catchall Tray](https://shariq-terra-studio-website.vercel.app/products/carved-travertine-catchall-tray): Monolithic natural beige travertine stone with honed matte texture ($130.00).
+## Products
+- [Speckled Ceramic Dinner Plate Set](https://shariq-terra-studio-website.vercel.app/products/speckled-ceramic-dinner-plate-set): Stoneware dinner plates, set of 4 ($145.00)
+- [Fluted Matte Terra Cotta Vase](https://shariq-terra-studio-website.vercel.app/products/fluted-matte-terra-cotta-vase): Unglazed sculptural vessel ($115.00)
+- [Brushed Brass Accent Lamp](https://shariq-terra-studio-website.vercel.app/products/brushed-brass-accent-lamp): Solid brass lamp with opal glass diffuser ($210.00)
+- [Woven Organic Linen Throw](https://shariq-terra-studio-website.vercel.app/products/woven-organic-linen-throw): Pre-washed 100% European flax linen ($160.00)
+- [Ribbed Stoneware Candle Holder](https://shariq-terra-studio-website.vercel.app/products/ribbed-stoneware-candle-holder): Ceramic taper candle holder ($65.00)
+- [Carved Travertine Catchall Tray](https://shariq-terra-studio-website.vercel.app/products/carved-travertine-catchall-tray): Natural beige travertine stone tray ($130.00)
 
 ## Studio Information
-- [About the Studio](https://shariq-terra-studio-website.vercel.app/about): Provenance, master artisans, clay sourcing, and slow living values.
+- [About the Studio](https://shariq-terra-studio-website.vercel.app/about): Craftsmanship, materials, and Scandinavian design philosophy
 
-## Agent & Machine Endpoints
-- [Agent Guidelines](https://shariq-terra-studio-website.vercel.app/AGENTS.md): Rate limits, allowed crawl actions, and operational policies for AI assistants.
-- [MCP Discovery](https://shariq-terra-studio-website.vercel.app/.well-known/mcp.json): Model Context Protocol server definition and catalog tool schemas.
-- [A2A Agent Card](https://shariq-terra-studio-website.vercel.app/.well-known/agent-card.json): Agent-to-Agent capabilities and skill definitions.
-- [Agents Intent Map](https://shariq-terra-studio-website.vercel.app/.well-known/agents.json): Intent-to-endpoint routing for shopping and research agents.
+## Machine Interfaces
+- [Agent Guidelines](https://shariq-terra-studio-website.vercel.app/AGENTS.md): Autonomous agent policies, crawl limits, and operational rules
+- [MCP Discovery](https://shariq-terra-studio-website.vercel.app/.well-known/mcp.json): Model Context Protocol server definition and catalog tool schemas
+- [A2A Agent Card](https://shariq-terra-studio-website.vercel.app/.well-known/agent-card.json): Agent-to-Agent discovery card and catalog capabilities
+- [Agents Intent Map](https://shariq-terra-studio-website.vercel.app/.well-known/agents.json): Intent-to-endpoint routing for shopping and research agents

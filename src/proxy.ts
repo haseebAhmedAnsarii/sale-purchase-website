@@ -5,6 +5,21 @@ export function proxy(request: NextRequest) {
   const accept = request.headers.get('accept') || ''
   const { pathname } = request.nextUrl
 
+  // Handle explicit .md path requests for markdown
+  if (pathname.endsWith('.md')) {
+    const cleanPath = pathname.replace(/\.md$/, '') || '/'
+    const url = request.nextUrl.clone()
+    url.pathname = '/api/markdown'
+    url.searchParams.set('path', cleanPath)
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-markdown-path', cleanPath)
+    return NextResponse.rewrite(url, {
+      request: {
+        headers: requestHeaders,
+      },
+    })
+  }
+
   // Ignore internal next.js files, api routes, and static file extensions
   if (
     pathname.startsWith('/_next') ||
@@ -19,7 +34,13 @@ export function proxy(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/api/markdown'
     url.searchParams.set('path', pathname)
-    return NextResponse.rewrite(url)
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-markdown-path', pathname)
+    return NextResponse.rewrite(url, {
+      request: {
+        headers: requestHeaders,
+      },
+    })
   }
 
   return NextResponse.next()
