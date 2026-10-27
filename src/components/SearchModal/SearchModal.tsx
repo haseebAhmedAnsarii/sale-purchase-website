@@ -36,11 +36,9 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
     lenis?.stop()
     const originalBodyOverflow = document.body.style.overflow
     const originalBodyPadding = document.body.style.paddingRight
-    const originalHtmlOverflow = document.documentElement.style.overflow
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
 
     document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
     if (scrollBarWidth > 0) {
       document.body.style.paddingRight = `${scrollBarWidth}px`
     }
@@ -48,7 +46,6 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
     return () => {
       document.body.style.overflow = originalBodyOverflow
       document.body.style.paddingRight = originalBodyPadding
-      document.documentElement.style.overflow = originalHtmlOverflow
       lenis?.start()
     }
   }, [isOpen, lenis])

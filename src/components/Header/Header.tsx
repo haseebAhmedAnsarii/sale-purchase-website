@@ -27,6 +27,11 @@ export function Header({ onOpenSearch }: Props) {
     setMounted(true)
   }, [])
 
+  // Automatically close mobile menu on route navigation
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [pathname])
+
   const isLinkActive = (href: string) => {
     if (!pathname) return false
     if (href === '/') return pathname === '/'
@@ -43,11 +48,9 @@ export function Header({ onOpenSearch }: Props) {
     lenis?.stop()
     const originalBodyOverflow = document.body.style.overflow
     const originalBodyPadding = document.body.style.paddingRight
-    const originalHtmlOverflow = document.documentElement.style.overflow
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
 
     document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
     if (scrollBarWidth > 0) {
       document.body.style.paddingRight = `${scrollBarWidth}px`
     }
@@ -65,6 +68,13 @@ export function Header({ onOpenSearch }: Props) {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setMobileMenuOpen(false)
+        return
+      }
+      if (['Space', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.code)) {
+        const target = e.target as HTMLElement | null
+        if (!mobileMenuRef.current?.contains(target)) {
+          e.preventDefault()
+        }
       }
     }
 
@@ -82,7 +92,6 @@ export function Header({ onOpenSearch }: Props) {
     return () => {
       document.body.style.overflow = originalBodyOverflow
       document.body.style.paddingRight = originalBodyPadding
-      document.documentElement.style.overflow = originalHtmlOverflow
       window.removeEventListener('wheel', preventBackgroundScroll)
       window.removeEventListener('touchmove', preventBackgroundScroll)
       window.removeEventListener('keydown', handleKeyDown)
@@ -170,163 +179,176 @@ export function Header({ onOpenSearch }: Props) {
   const showHeader = isVisible || mobileMenuOpen
 
   return (
-    <header
-      className={`sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 will-change-[transform,translate] transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-        isScrolled ? 'shadow-sm' : ''
-      } ${
-        showHeader
-          ? 'translate-y-0 opacity-100'
-          : '-translate-y-full opacity-0 pointer-events-none'
-      }`}
-    >
-      <Container className="flex h-16 sm:h-20 items-center justify-between">
-        {/* Left Navigation */}
-        <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-          {navLinks.map((link) => {
-            const active = isLinkActive(link.href)
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`relative text-sm tracking-tight transition-colors duration-300 after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:transition-all after:duration-500 after:ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  active
-                    ? 'text-black font-semibold after:w-full after:bg-black'
-                    : 'text-gray-600 font-medium hover:text-black after:w-0 hover:after:w-full after:bg-black'
-                }`}
-              >
-                {link.label}
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* Mobile menu button with animated bars */}
-        <button
-          type="button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300 active:scale-90 cursor-pointer"
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={mobileMenuOpen}
-        >
-          <div className="relative h-5 w-5">
-            <span
-              className={`absolute left-0 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                mobileMenuOpen ? 'top-2.5 rotate-45' : 'top-1'
-              }`}
-            />
-            <span
-              className={`absolute left-0 top-2.5 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                mobileMenuOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'
-              }`}
-            />
-            <span
-              className={`absolute left-0 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                mobileMenuOpen ? 'top-2.5 -rotate-45' : 'top-4'
-              }`}
-            />
-          </div>
-        </button>
-
-        {/* Center Store Title / Logo */}
-        <div className="flex min-w-0 items-center justify-center px-2 text-center">
-          <Link
-            href="/"
-            className="text-base sm:text-lg font-bold tracking-tight text-gray-950 transition-opacity duration-400 hover:opacity-75 truncate"
-          >
-            {businessName}
-          </Link>
-        </div>
-
-        {/* Search Action with ⌘K Badge */}
-        <div className="flex shrink-0 items-center justify-end">
-          <button
-            type="button"
-            onClick={handleSearchClick}
-            className="group flex h-9 sm:h-10 items-center gap-2 rounded-full px-2.5 sm:px-3 text-gray-800 hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95"
-            aria-label="Search catalog (Press ⌘K or /)"
-            title="Search catalog (⌘K or /)"
-          >
-            <svg
-              className="h-4.5 w-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            <span className="hidden sm:inline-flex items-center gap-0.5 rounded border border-gray-200 bg-gray-50/90 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 group-hover:border-gray-300 group-hover:text-gray-700 transition-colors">
-              <kbd className="font-sans">⌘</kbd>K
-            </span>
-          </button>
-        </div>
-      </Container>
-
-      {/* Mobile dropdown menu with smooth expand/collapse */}
-      <div
-        ref={mobileMenuRef}
-        data-lenis-prevent
-        style={{
-          gridTemplateRows: mobileMenuOpen ? '1fr' : '0fr',
-        }}
-        className={`md:hidden grid bg-white transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          mobileMenuOpen
-            ? 'opacity-100 border-b border-gray-100 shadow-lg'
-            : 'opacity-0 border-b border-transparent pointer-events-none'
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 will-change-[transform,translate] transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isScrolled ? 'shadow-sm' : ''
+        } ${
+          showHeader
+            ? 'translate-y-0 opacity-100'
+            : '-translate-y-full opacity-0 pointer-events-none'
         }`}
       >
-        <div className="overflow-y-auto max-h-[calc(100dvh-5rem)] min-h-0" data-lenis-prevent>
-          <div className="flex flex-col space-y-4 px-6 py-5">
-            {navLinks.map((link, idx) => {
+        <Container className="flex h-16 sm:h-20 items-center justify-between">
+          {/* Left Navigation */}
+          <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
+            {navLinks.map((link) => {
               const active = isLinkActive(link.href)
               return (
                 <Link
                   key={link.label}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  style={{
-                    transitionDelay: mobileMenuOpen ? `${idx * 60}ms` : '0ms',
-                  }}
-                  className={`text-base font-medium py-1 transition-all duration-300 ${
+                  className={`relative text-sm tracking-tight transition-colors duration-300 after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:transition-all after:duration-500 after:ease-[cubic-bezier(0.16,1,0.3,1)] ${
                     active
-                      ? 'text-black font-bold border-l-2 border-[#765b48] pl-3'
-                      : 'text-gray-600 hover:text-black pl-0'
-                  } ${
-                    mobileMenuOpen
-                      ? 'translate-x-0 opacity-100'
-                      : '-translate-x-3 opacity-0'
+                      ? 'text-black font-semibold after:w-full after:bg-black'
+                      : 'text-gray-600 font-medium hover:text-black after:w-0 hover:after:w-full after:bg-black'
                   }`}
                 >
                   {link.label}
                 </Link>
               )
             })}
+          </nav>
+
+          {/* Mobile menu button with animated bars */}
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen((prev) => {
+                const next = !prev
+                if (next) {
+                  setIsVisible(true)
+                }
+                return next
+              })
+            }}
+            className="md:hidden relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300 active:scale-90 cursor-pointer"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+          >
+            <div className="relative h-5 w-5">
+              <span
+                className={`absolute left-0 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  mobileMenuOpen ? 'top-2.5 rotate-45' : 'top-1'
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-2.5 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  mobileMenuOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'
+                }`}
+              />
+              <span
+                className={`absolute left-0 block h-0.5 w-5 bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  mobileMenuOpen ? 'top-2.5 -rotate-45' : 'top-4'
+                }`}
+              />
+            </div>
+          </button>
+
+          {/* Center Store Title / Logo */}
+          <div className="flex min-w-0 items-center justify-center px-2 text-center">
+            <Link
+              href="/"
+              className="text-base sm:text-lg font-bold tracking-tight text-gray-950 transition-opacity duration-400 hover:opacity-75 truncate"
+            >
+              {businessName}
+            </Link>
+          </div>
+
+          {/* Search Action with ⌘K Badge */}
+          <div className="flex shrink-0 items-center justify-end">
+            <button
+              type="button"
+              onClick={handleSearchClick}
+              className="group flex h-9 sm:h-10 items-center gap-2 rounded-full px-2.5 sm:px-3 text-gray-800 hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95"
+              aria-label="Search catalog (Press ⌘K or /)"
+              title="Search catalog (⌘K or /)"
+            >
+              <svg
+                className="h-4.5 w-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <span className="hidden sm:inline-flex items-center gap-0.5 rounded border border-gray-200 bg-gray-50/90 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 group-hover:border-gray-300 group-hover:text-gray-700 transition-colors">
+                <kbd className="font-sans">⌘</kbd>K
+              </span>
+            </button>
+          </div>
+        </Container>
+
+        {/* Mobile dropdown menu with smooth expand/collapse */}
+        <div
+          ref={mobileMenuRef}
+          data-lenis-prevent
+          style={{
+            gridTemplateRows: mobileMenuOpen ? '1fr' : '0fr',
+          }}
+          className={`md:hidden grid bg-white transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${
+            mobileMenuOpen
+              ? 'opacity-100 border-b border-gray-100 shadow-xl'
+              : 'opacity-0 border-b border-transparent pointer-events-none'
+          }`}
+        >
+          <div className="overflow-y-auto max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-5rem)] min-h-0 overscroll-contain" data-lenis-prevent>
+            <div className="flex flex-col space-y-4 px-6 py-5">
+              {navLinks.map((link, idx) => {
+                const active = isLinkActive(link.href)
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={{
+                      transitionDelay: mobileMenuOpen ? `${idx * 60}ms` : '0ms',
+                    }}
+                    className={`text-base font-medium py-1 transition-all duration-300 ${
+                      active
+                        ? 'text-black font-bold border-l-2 border-[#765b48] pl-3'
+                        : 'text-gray-600 hover:text-black pl-0'
+                    } ${
+                      mobileMenuOpen
+                        ? 'translate-x-0 opacity-100'
+                        : '-translate-x-3 opacity-0'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Backdrop overlay for mobile menu to catch any clicks/touch and block background */}
-      {mounted && mobileMenuOpen && createPortal(
-        <div
-          className="fixed inset-0 top-16 sm:top-20 z-30 bg-black/35 backdrop-blur-xs transition-opacity duration-300 md:hidden animate-fade-in"
-          onClick={() => setMobileMenuOpen(false)}
-          aria-hidden="true"
-          data-lenis-prevent
-        />,
-        document.body
-      )}
+        {/* Backdrop overlay for mobile menu to catch any clicks/touch and block background */}
+        {mounted && mobileMenuOpen && createPortal(
+          <div
+            className="fixed inset-0 top-16 sm:top-20 z-30 bg-black/35 backdrop-blur-sm transition-opacity duration-300 md:hidden animate-fade-in touch-none"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+            data-lenis-prevent
+          />,
+          document.body
+        )}
 
-      {/* Internal Search Modal when not controlled externally */}
-      {!onOpenSearch && (
-        <SearchModal
-          isOpen={internalSearchOpen}
-          onClose={() => setInternalSearchOpen(false)}
-        />
-      )}
-    </header>
+        {/* Internal Search Modal when not controlled externally */}
+        {!onOpenSearch && (
+          <SearchModal
+            isOpen={internalSearchOpen}
+            onClose={() => setInternalSearchOpen(false)}
+          />
+        )}
+      </header>
+
+      {/* Spacer matching header height to preserve document flow without layout shift */}
+      <div className="h-16 sm:h-20 shrink-0" aria-hidden="true" />
+    </>
   )
 }
