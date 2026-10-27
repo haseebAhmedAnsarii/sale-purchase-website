@@ -3,6 +3,7 @@
 import { useState, useEffect, useId, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useLenis } from 'lenis/react'
 import type { Product } from '@/types'
 import { productsData } from '@/data/products'
 import { collectionsData } from '@/data/collections'
@@ -20,6 +21,31 @@ const MAX_SEARCH_RESULTS = 4
 export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
   const [query, setQuery] = useState('')
   const searchInputId = useId()
+  const lenis = useLenis()
+
+  // Prevent background and Lenis scroll when search modal is open
+  useEffect(() => {
+    if (!isOpen) return
+
+    lenis?.stop()
+    const originalBodyOverflow = document.body.style.overflow
+    const originalBodyPadding = document.body.style.paddingRight
+    const originalHtmlOverflow = document.documentElement.style.overflow
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
+
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    if (scrollBarWidth > 0) {
+      document.body.style.paddingRight = `${scrollBarWidth}px`
+    }
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow
+      document.body.style.paddingRight = originalBodyPadding
+      document.documentElement.style.overflow = originalHtmlOverflow
+      lenis?.start()
+    }
+  }, [isOpen, lenis])
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -63,6 +89,7 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
     <div
       className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 backdrop-blur-xs pt-[10vh] px-4 transition-opacity animate-fade-in"
       onClick={onClose}
+      data-lenis-prevent
     >
       <div
         className="animate-scale-in w-full max-w-[42rem] rounded-2xl bg-white shadow-2xl overflow-hidden border border-gray-100"
@@ -70,6 +97,7 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="Search products"
+        data-lenis-prevent
       >
         {/* Search Input Bar */}
         <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
@@ -118,7 +146,7 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
         </div>
 
         {/* Content Body */}
-        <div className="max-h-[26rem] overflow-y-auto p-4 sm:p-5">
+        <div className="max-h-[26rem] overflow-y-auto p-4 sm:p-5" data-lenis-prevent>
           {!isSearching ? (
             /* Empty State: Quick Suggestions & Curated Popular Picks */
             <div className="space-y-6">
