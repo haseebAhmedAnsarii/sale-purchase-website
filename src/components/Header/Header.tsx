@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useLenis } from 'lenis/react'
 import { Container } from '../Container'
 import { SearchModal } from '../SearchModal'
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function Header({ onOpenSearch }: Props) {
+  const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [internalSearchOpen, setInternalSearchOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
@@ -24,6 +26,15 @@ export function Header({ onOpenSearch }: Props) {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const isLinkActive = (href: string) => {
+    if (!pathname) return false
+    if (href === '/') return pathname === '/'
+    if (href === '/collections/all') {
+      return pathname.startsWith('/collections') || pathname.startsWith('/products')
+    }
+    return pathname === href || pathname.startsWith(href + '/')
+  }
 
   // Lock background scroll and Lenis completely when mobile menu is opened
   useEffect(() => {
@@ -80,6 +91,7 @@ export function Header({ onOpenSearch }: Props) {
     }
   }, [mobileMenuOpen, lenis])
 
+  // Scroll detection for auto-hiding header
   useEffect(() => {
     let lastScrollY = window.scrollY
     let ticking = false
@@ -129,6 +141,32 @@ export function Header({ onOpenSearch }: Props) {
     }
   }
 
+  // Global search keyboard shortcut (⌘K, Ctrl+K, or /)
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable)
+      ) {
+        return
+      }
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        handleSearchClick()
+      } else if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault()
+        handleSearchClick()
+      }
+    }
+
+    window.addEventListener('keydown', handleGlobalKeyDown)
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown)
+  }, [onOpenSearch])
+
   const showHeader = isVisible || mobileMenuOpen
 
   return (
@@ -144,15 +182,22 @@ export function Header({ onOpenSearch }: Props) {
       <Container className="flex h-16 sm:h-20 items-center justify-between">
         {/* Left Navigation */}
         <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="relative text-sm font-medium text-gray-800 transition-colors duration-400 hover:text-black tracking-tight after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-black after:transition-all after:duration-600 after:ease-[cubic-bezier(0.16,1,0.3,1)]"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const active = isLinkActive(link.href)
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                className={`relative text-sm tracking-tight transition-colors duration-300 after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:transition-all after:duration-500 after:ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  active
+                    ? 'text-black font-semibold after:w-full after:bg-black'
+                    : 'text-gray-600 font-medium hover:text-black after:w-0 hover:after:w-full after:bg-black'
+                }`}
+              >
+                {link.label}
+              </Link>
+            )
+          })}
         </nav>
 
         {/* Mobile menu button with animated bars */}
@@ -192,16 +237,17 @@ export function Header({ onOpenSearch }: Props) {
           </Link>
         </div>
 
-        {/* Search Action */}
+        {/* Search Action with ⌘K Badge */}
         <div className="flex shrink-0 items-center justify-end">
           <button
             type="button"
             onClick={handleSearchClick}
-            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-gray-800 hover:bg-gray-100 transition-all duration-400 hover:scale-105 active:scale-95"
-            aria-label="Search store"
+            className="group flex h-9 sm:h-10 items-center gap-2 rounded-full px-2.5 sm:px-3 text-gray-800 hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95"
+            aria-label="Search catalog (Press ⌘K or /)"
+            title="Search catalog (⌘K or /)"
           >
             <svg
-              className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110"
+              className="h-4.5 w-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -213,6 +259,9 @@ export function Header({ onOpenSearch }: Props) {
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
+            <span className="hidden sm:inline-flex items-center gap-0.5 rounded border border-gray-200 bg-gray-50/90 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 group-hover:border-gray-300 group-hover:text-gray-700 transition-colors">
+              <kbd className="font-sans">⌘</kbd>K
+            </span>
           </button>
         </div>
       </Container>
@@ -232,23 +281,30 @@ export function Header({ onOpenSearch }: Props) {
       >
         <div className="overflow-y-auto max-h-[calc(100dvh-5rem)] min-h-0" data-lenis-prevent>
           <div className="flex flex-col space-y-4 px-6 py-5">
-            {navLinks.map((link, idx) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  transitionDelay: mobileMenuOpen ? `${idx * 60}ms` : '0ms',
-                }}
-                className={`text-base font-medium text-gray-800 hover:text-black py-1 transition-all duration-300 ${
-                  mobileMenuOpen
-                    ? 'translate-x-0 opacity-100'
-                    : '-translate-x-3 opacity-0'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link, idx) => {
+              const active = isLinkActive(link.href)
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    transitionDelay: mobileMenuOpen ? `${idx * 60}ms` : '0ms',
+                  }}
+                  className={`text-base font-medium py-1 transition-all duration-300 ${
+                    active
+                      ? 'text-black font-bold border-l-2 border-[#765b48] pl-3'
+                      : 'text-gray-600 hover:text-black pl-0'
+                  } ${
+                    mobileMenuOpen
+                      ? 'translate-x-0 opacity-100'
+                      : '-translate-x-3 opacity-0'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </div>
         </div>
       </div>

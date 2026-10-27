@@ -1,5 +1,7 @@
+import { Suspense } from 'react'
 import type { Metadata, Viewport } from 'next'
 import { SmoothScroll } from '@/components/SmoothScroll'
+import { NavigationProgressBar } from '@/components/NavigationProgressBar'
 import './globals.css'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
@@ -166,6 +168,9 @@ export default function RootLayout({
         </noscript>
       </head>
       <body className="min-h-full flex flex-col bg-white text-gray-900">
+        <Suspense fallback={null}>
+          <NavigationProgressBar />
+        </Suspense>
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
