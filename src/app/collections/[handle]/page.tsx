@@ -8,6 +8,8 @@ import { CollectionDetailClient } from './CollectionDetailClient'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
 
+export const instant = false
+
 interface PageProps {
   params: Promise<{
     handle: string
