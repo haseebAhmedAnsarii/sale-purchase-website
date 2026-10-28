@@ -1,10 +1,9 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { productsData } from '@/data/products'
-import { getProductSlug } from '@/utils/product'
+import { getProductSlug, getProductBySlug } from '@/utils/product'
+import { siteConfig } from '@/config/site'
 import { ProductDetailClient } from './ProductDetailClient'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
 
 export const instant = false
 
@@ -12,10 +11,6 @@ interface PageProps {
   params: Promise<{
     handle: string
   }>
-}
-
-function findProduct(handle: string) {
-  return productsData.find((p) => getProductSlug(p) === handle)
 }
 
 export function generateStaticParams() {
@@ -26,7 +21,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { handle } = await params
-  const product = findProduct(handle)
+  const product = getProductBySlug(handle)
 
   if (!product) {
     return {
@@ -60,16 +55,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { handle } = await params
-  const product = findProduct(handle)
+  const product = getProductBySlug(handle)
 
   if (!product) {
     notFound()
   }
 
-  const productUrl = `${SITE_URL}/products/${handle}`
+  const productUrl = `${siteConfig.url}/products/${handle}`
   const imageUrl = product.imageSrc?.startsWith('http')
     ? product.imageSrc
-    : `${SITE_URL}${product.imageSrc || '/og-image.jpg'}`
+    : `${siteConfig.url}${product.imageSrc || '/og-image.jpg'}`
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -111,13 +106,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: SITE_URL,
+            item: siteConfig.url,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: 'Catalog',
-            item: `${SITE_URL}/collections/all`,
+            item: `${siteConfig.url}/collections/all`,
           },
           {
             '@type': 'ListItem',

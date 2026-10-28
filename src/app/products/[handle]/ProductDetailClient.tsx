@@ -9,7 +9,6 @@ import { PlaceholderImage } from '@/components/PlaceholderImage'
 import { ProductCard } from '@/components/ProductCard'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import { Footer } from '@/components/Footer'
-import { SearchModal } from '@/components/SearchModal'
 import { productsData } from '@/data/products'
 import { businessName } from '@/data/navigation'
 import { addRecentlyViewed, useRecentlyViewed } from '@/utils/recentlyViewed'
@@ -20,7 +19,6 @@ interface Props {
 }
 
 export function ProductDetailClient({ product }: Props) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [openSection, setOpenSection] = useState<string | null>(null)
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -62,7 +60,7 @@ export function ProductDetailClient({ product }: Props) {
   return (
     <div className="flex min-h-screen flex-col bg-white">
       {/* Header */}
-      <Header onOpenSearch={() => setIsSearchOpen(true)} />
+      <Header />
 
       {/* Main Content */}
       <main className="flex-1 py-8 sm:py-12 animate-fade-in">
@@ -349,12 +347,6 @@ export function ProductDetailClient({ product }: Props) {
 
       {/* Footer */}
       <Footer />
-
-      {/* Search Modal */}
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
 
       {/* Floating Share / Copy Toast Notification */}
       {toastMessage && (

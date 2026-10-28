@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import { CollectionsAllClient } from './CollectionsAllClient'
 import { productsData } from '@/data/products'
 import { getProductSlug } from '@/utils/product'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: 'Complete Catalog | All Handcrafted Ceramics & Living Decor',
@@ -26,8 +25,8 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'CollectionPage',
-      '@id': `${SITE_URL}/collections/all#webpage`,
-      url: `${SITE_URL}/collections/all`,
+      '@id': `${siteConfig.url}/collections/all#webpage`,
+      url: `${siteConfig.url}/collections/all`,
       name: 'All Products | TERRA STUDIO',
       description:
         'Complete catalog of handcrafted stoneware ceramics, sculptural vases, ambient lighting, and organic linen textiles.',
@@ -35,37 +34,37 @@ const jsonLd = {
       dateModified: '2026-10-27T00:00:00Z',
       isPartOf: {
         '@type': 'WebSite',
-        '@id': `${SITE_URL}/#website`,
+        '@id': `${siteConfig.url}/#website`,
         name: 'TERRA STUDIO',
       },
     },
     {
       '@type': 'ItemList',
-      '@id': `${SITE_URL}/collections/all#itemlist`,
+      '@id': `${siteConfig.url}/collections/all#itemlist`,
       name: 'All Products',
       numberOfItems: productsData.length,
       itemListElement: productsData.map((prod, index) => ({
         '@type': 'ListItem',
         position: index + 1,
         name: prod.title,
-        url: `${SITE_URL}/products/${getProductSlug(prod)}`,
+        url: `${siteConfig.url}/products/${getProductSlug(prod)}`,
       })),
     },
     {
       '@type': 'BreadcrumbList',
-      '@id': `${SITE_URL}/collections/all#breadcrumbs`,
+      '@id': `${siteConfig.url}/collections/all#breadcrumbs`,
       itemListElement: [
         {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: SITE_URL,
+          item: siteConfig.url,
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Catalog',
-          item: `${SITE_URL}/collections/all`,
+          item: `${siteConfig.url}/collections/all`,
         },
       ],
     },

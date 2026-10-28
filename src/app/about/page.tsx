@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { AboutClient } from './AboutClient'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: 'About Our Studio & Artisanal Provenance',
@@ -22,8 +21,8 @@ export const metadata: Metadata = {
 const aboutJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
-  '@id': `${SITE_URL}/about#webpage`,
-  url: `${SITE_URL}/about`,
+  '@id': `${siteConfig.url}/about#webpage`,
+  url: `${siteConfig.url}/about`,
   name: 'About TERRA STUDIO',
   description:
     'Handcrafted stoneware ceramics, sculptural vases, and warm ambient lighting rooted in Scandinavian minimalism and slow living.',
@@ -32,8 +31,8 @@ const aboutJsonLd = {
   mainEntity: {
     '@type': 'Organization',
     name: 'TERRA STUDIO',
-    url: SITE_URL,
-    logo: `${SITE_URL}/icon.png`,
+    url: siteConfig.url,
+    logo: `${siteConfig.url}/icon.png`,
   },
 }
 

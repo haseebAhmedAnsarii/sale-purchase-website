@@ -7,13 +7,11 @@ import { ProductCard } from '@/components/ProductCard'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import { SortDropdown, type SortOption } from '@/components/SortDropdown'
 import { Footer } from '@/components/Footer'
-import { SearchModal } from '@/components/SearchModal'
 import { productsData } from '@/data/products'
 import { collectionsData } from '@/data/collections'
 import { useRecentlyViewed } from '@/utils/recentlyViewed'
 
 export function CollectionsAllClient() {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [sortBy, setSortBy] = useState<SortOption>('featured')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const recentlyViewed = useRecentlyViewed()
@@ -39,7 +37,7 @@ export function CollectionsAllClient() {
   return (
     <div className="flex min-h-screen flex-col bg-white">
       {/* Header */}
-      <Header onOpenSearch={() => setIsSearchOpen(true)} />
+      <Header />
 
       {/* Main Content */}
       <main className="flex-1 py-10 sm:py-14 animate-fade-in">
@@ -155,12 +153,6 @@ export function CollectionsAllClient() {
 
       {/* Footer */}
       <Footer />
-
-      {/* Search Modal */}
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
     </div>
   )
 }

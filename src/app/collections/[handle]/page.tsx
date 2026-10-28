@@ -2,11 +2,10 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { collectionsData } from '@/data/collections'
 import { productsData } from '@/data/products'
-import { getCollectionSlug } from '@/utils/collection'
 import { getProductSlug } from '@/utils/product'
+import { getCollectionSlug, getCollectionBySlug } from '@/utils/collection'
+import { siteConfig } from '@/config/site'
 import { CollectionDetailClient } from './CollectionDetailClient'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
 
 export const instant = false
 
@@ -24,7 +23,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { handle } = await params
-  const collection = collectionsData.find((c) => getCollectionSlug(c) === handle)
+  const collection = getCollectionBySlug(handle)
 
   if (!collection) {
     return {
@@ -58,7 +57,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CollectionPage({ params }: PageProps) {
   const { handle } = await params
-  const collection = collectionsData.find((c) => getCollectionSlug(c) === handle)
+  const collection = getCollectionBySlug(handle)
 
   if (!collection) {
     notFound()
@@ -68,7 +67,7 @@ export default async function CollectionPage({ params }: PageProps) {
     collection.productIds?.includes(product.id)
   )
 
-  const collectionUrl = `${SITE_URL}/collections/${handle}`
+  const collectionUrl = `${siteConfig.url}/collections/${handle}`
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -83,7 +82,7 @@ export default async function CollectionPage({ params }: PageProps) {
         dateModified: '2026-10-27T00:00:00Z',
         isPartOf: {
           '@type': 'WebSite',
-          '@id': `${SITE_URL}/#website`,
+          '@id': `${siteConfig.url}/#website`,
           name: 'TERRA STUDIO',
         },
       },
@@ -97,7 +96,7 @@ export default async function CollectionPage({ params }: PageProps) {
           '@type': 'ListItem',
           position: index + 1,
           name: prod.title,
-          url: `${SITE_URL}/products/${getProductSlug(prod)}`,
+          url: `${siteConfig.url}/products/${getProductSlug(prod)}`,
         })),
       },
       {
@@ -108,13 +107,13 @@ export default async function CollectionPage({ params }: PageProps) {
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: SITE_URL,
+            item: siteConfig.url,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: 'Collections',
-            item: `${SITE_URL}/collections/all`,
+            item: `${siteConfig.url}/collections/all`,
           },
           {
             '@type': 'ListItem',

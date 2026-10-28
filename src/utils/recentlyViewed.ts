@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { productsData } from '@/data/products'
+import { getProductById } from '@/utils/product'
 import type { Product } from '@/types'
 
 const STORAGE_KEY = 'terra_recently_viewed'
@@ -37,7 +37,7 @@ export function useRecentlyViewed(excludeId?: string): Product[] {
     const ids = getRecentlyViewedIds()
     const filteredIds = excludeId ? ids.filter((id) => id !== excludeId) : ids
     const found = filteredIds
-      .map((id) => productsData.find((p) => p.id === id))
+      .map((id) => getProductById(id))
       .filter((p): p is Product => Boolean(p))
 
     setRecentProducts(found)

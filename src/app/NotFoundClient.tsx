@@ -1,24 +1,23 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { Container } from '@/components/Container'
 import { ProductCard } from '@/components/ProductCard'
 import { Footer } from '@/components/Footer'
-import { SearchModal } from '@/components/SearchModal'
+import { useSearch } from '@/context'
 import { productsData } from '@/data/products'
 import { collectionsData } from '@/data/collections'
 import { getCollectionSlug } from '@/utils/collection'
 
 export function NotFoundClient() {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const { openSearch } = useSearch()
   const suggestedProducts = productsData.slice(0, 4)
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
       {/* Header */}
-      <Header onOpenSearch={() => setIsSearchOpen(true)} />
+      <Header />
 
       {/* Main 404 Hero */}
       <main className="flex-1 py-14 sm:py-20 animate-fade-in">
@@ -57,7 +56,7 @@ export function NotFoundClient() {
               </Link>
               <button
                 type="button"
-                onClick={() => setIsSearchOpen(true)}
+                onClick={openSearch}
                 className="inline-flex items-center justify-center gap-2 rounded-xs border border-transparent bg-[#f4f2ef] px-5 py-3.5 text-xs sm:text-sm font-semibold tracking-wide text-gray-800 transition-all duration-500 hover:bg-[#eae6e1] cursor-pointer"
               >
                 <svg
@@ -131,12 +130,6 @@ export function NotFoundClient() {
 
       {/* Footer */}
       <Footer />
-
-      {/* Search Modal */}
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
     </div>
   )
 }

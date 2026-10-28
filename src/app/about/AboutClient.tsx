@@ -1,20 +1,14 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
 import { Container } from '@/components/Container'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import { Footer } from '@/components/Footer'
-import { SearchModal } from '@/components/SearchModal'
 
 export function AboutClient() {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
-      <Header onOpenSearch={() => setIsSearchOpen(true)} />
+      <Header />
 
       <main className="flex-1">
         {/* Editorial Hero */}
@@ -157,12 +151,6 @@ export function AboutClient() {
       </main>
 
       <Footer />
-
-      {/* Interactive Search Modal */}
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
     </div>
   )
 }

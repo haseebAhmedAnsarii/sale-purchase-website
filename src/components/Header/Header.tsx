@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLenis } from 'lenis/react'
 import { Container } from '../Container'
-import { SearchModal } from '../SearchModal'
+import { useSearch } from '@/context'
 import { navLinks, businessName } from '@/data/navigation'
 
 interface Props {
@@ -15,8 +15,8 @@ interface Props {
 
 export function Header({ onOpenSearch }: Props) {
   const pathname = usePathname()
+  const { openSearch } = useSearch()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [internalSearchOpen, setInternalSearchOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -146,7 +146,7 @@ export function Header({ onOpenSearch }: Props) {
     if (onOpenSearch) {
       onOpenSearch()
     } else {
-      setInternalSearchOpen(true)
+      openSearch()
     }
   }
 
@@ -336,14 +336,6 @@ export function Header({ onOpenSearch }: Props) {
             data-lenis-prevent
           />,
           document.body
-        )}
-
-        {/* Internal Search Modal when not controlled externally */}
-        {!onOpenSearch && (
-          <SearchModal
-            isOpen={internalSearchOpen}
-            onClose={() => setInternalSearchOpen(false)}
-          />
         )}
       </header>
 

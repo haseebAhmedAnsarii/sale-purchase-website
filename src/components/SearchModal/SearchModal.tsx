@@ -27,6 +27,7 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [recentSearches, setRecentSearches] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
   const searchInputId = useId()
   const lenis = useLenis()
   const router = useRouter()
@@ -134,6 +135,24 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
 
       if (e.key === 'Escape') {
         onClose()
+      } else if (e.key === 'Tab') {
+        const modal = modalRef.current
+        if (modal) {
+          const focusable = modal.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+          if (focusable.length > 0) {
+            const first = focusable[0]
+            const last = focusable[focusable.length - 1]
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault()
+              last.focus()
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault()
+              first.focus()
+            }
+          }
+        }
       } else if (e.key === 'ArrowDown') {
         if (displayedResults.length > 0) {
           e.preventDefault()
@@ -179,6 +198,7 @@ export function SearchModal({ isOpen, onClose, onSelectProduct }: Props) {
       data-lenis-prevent
     >
       <div
+        ref={modalRef}
         className="animate-scale-in w-full max-w-[42rem] rounded-2xl bg-white shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
         role="dialog"

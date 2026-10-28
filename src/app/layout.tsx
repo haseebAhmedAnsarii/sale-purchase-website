@@ -1,11 +1,19 @@
 import { Suspense } from 'react'
 import type { Metadata, Viewport } from 'next'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import { SmoothScroll } from '@/components/SmoothScroll'
 import { NavigationProgressBar } from '@/components/NavigationProgressBar'
 import { BackToTop } from '@/components/BackToTop'
+import { SearchProvider } from '@/context'
+import { siteConfig } from '@/config/site'
 import './globals.css'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shariq-terra-studio-website.vercel.app'
+const sansFont = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+  weight: ['400', '500', '600', '700'],
+})
 
 export const viewport: Viewport = {
   themeColor: '#1c1917',
@@ -14,7 +22,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: new URL(siteConfig.url),
   alternates: {
     canonical: '/',
     languages: {
@@ -91,29 +99,29 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'WebSite',
-      '@id': `${SITE_URL}/#website`,
-      url: SITE_URL,
+      '@id': `${siteConfig.url}/#website`,
+      url: siteConfig.url,
       name: 'TERRA STUDIO',
       description: 'Scandinavian Ceramics & Modern Home Decor',
       inLanguage: 'en-US',
       datePublished: '2026-01-01T00:00:00Z',
       dateModified: '2026-10-27T00:00:00Z',
       publisher: {
-        '@id': `${SITE_URL}/#organization`,
+        '@id': `${siteConfig.url}/#organization`,
       },
     },
     {
       '@type': 'Organization',
-      '@id': `${SITE_URL}/#organization`,
+      '@id': `${siteConfig.url}/#organization`,
       name: 'TERRA STUDIO',
-      url: SITE_URL,
-      logo: `${SITE_URL}/icon.png`,
-      image: `${SITE_URL}/og-image.jpg`,
+      url: siteConfig.url,
+      logo: `${siteConfig.url}/icon.png`,
+      image: `${siteConfig.url}/og-image.jpg`,
       description: 'Handcrafted stoneware, sculptural vases, and warm ambient lighting rooted in Scandinavian minimalism and slow living.',
     },
     {
       '@type': 'FAQPage',
-      '@id': `${SITE_URL}/#faq`,
+      '@id': `${siteConfig.url}/#faq`,
       datePublished: '2026-01-01T00:00:00Z',
       dateModified: '2026-10-27T00:00:00Z',
       mainEntity: [
@@ -168,14 +176,16 @@ export default function RootLayout({
           `}</style>
         </noscript>
       </head>
-      <body className="min-h-full flex flex-col bg-white text-gray-900">
+      <body className={`min-h-full flex flex-col bg-white text-gray-900 ${sansFont.variable} font-sans`}>
         <Suspense fallback={null}>
           <NavigationProgressBar />
         </Suspense>
-        <SmoothScroll>
-          {children}
-          <BackToTop />
-        </SmoothScroll>
+        <SearchProvider>
+          <SmoothScroll>
+            {children}
+            <BackToTop />
+          </SmoothScroll>
+        </SearchProvider>
         <div className="paper-grain-overlay" aria-hidden="true" />
       </body>
     </html>
