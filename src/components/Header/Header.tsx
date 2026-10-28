@@ -20,10 +20,20 @@ export function Header({ onOpenSearch }: Props) {
   const [isVisible, setIsVisible] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [isMac, setIsMac] = useState(true)
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const lenis = useLenis()
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+      const nav = navigator as Navigator & { userAgentData?: { platform?: string } }
+      const platform =
+        nav.userAgentData?.platform ||
+        nav.platform ||
+        nav.userAgent ||
+        ''
+      setIsMac(/(Mac|iPhone|iPod|iPad)/i.test(platform))
+    }
     setMounted(true)
   }, [])
 
@@ -255,14 +265,14 @@ export function Header({ onOpenSearch }: Props) {
             </Link>
           </div>
 
-          {/* Search Action with ⌘K Badge */}
+          {/* Search Action with Zero-Flash Adaptive Shortcut Badge (⌘K on Apple / Ctrl K on Windows & Linux) */}
           <div className="flex shrink-0 items-center justify-end">
             <button
               type="button"
               onClick={handleSearchClick}
               className="group flex h-9 sm:h-10 items-center gap-2 rounded-full px-2.5 sm:px-3 text-gray-800 hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95"
-              aria-label="Search catalog (Press ⌘K or /)"
-              title="Search catalog (⌘K or /)"
+              aria-label="Search catalog (Press Ctrl+K, ⌘K, or /)"
+              title="Search catalog (Ctrl+K or ⌘K)"
             >
               <svg
                 className="h-4.5 w-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110"
@@ -277,8 +287,30 @@ export function Header({ onOpenSearch }: Props) {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-              <span className="hidden sm:inline-flex items-center gap-0.5 rounded border border-gray-200 bg-gray-50/90 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 group-hover:border-gray-300 group-hover:text-gray-700 transition-colors">
-                <kbd className="font-sans">⌘</kbd>K
+              <span
+                className={`hidden sm:inline-flex items-center gap-0.5 rounded border border-gray-200 bg-gray-50/90 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 group-hover:border-gray-300 group-hover:text-gray-700 transition-opacity duration-200 ${
+                  mounted ? 'opacity-100' : 'opacity-0'
+                }`}
+                aria-hidden="true"
+              >
+                {mounted ? (
+                  isMac ? (
+                    <>
+                      <kbd className="font-sans">⌘</kbd>
+                      <span>K</span>
+                    </>
+                  ) : (
+                    <>
+                      <kbd className="font-sans text-[9px] font-medium">Ctrl</kbd>
+                      <span className="ml-0.5">K</span>
+                    </>
+                  )
+                ) : (
+                  <>
+                    <kbd className="font-sans text-[9px] font-medium invisible">Ctrl</kbd>
+                    <span className="ml-0.5 invisible">K</span>
+                  </>
+                )}
               </span>
             </button>
           </div>
